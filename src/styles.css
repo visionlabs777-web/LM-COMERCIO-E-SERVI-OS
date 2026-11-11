@@ -23,3 +23,7 @@
 /* Social placeholders and official WhatsApp mark */
 .footer-socials{display:flex;flex-direction:column;gap:7px;margin-top:11px}.footer-social-label{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#686868}.social-button{display:inline-flex;align-items:center;gap:8px;width:max-content;padding:0;border:0;background:transparent;color:#777;cursor:not-allowed;font-size:12px;text-align:left}.social-button:disabled{opacity:.72}.social-button svg{color:#8a8a8a}.floating-whatsapp{background:#fff;transition:width .25s,background .25s}.floating-whatsapp:hover{background:#fff}.floating-whatsapp img{width:31px;height:31px;object-fit:contain;flex:0 0 auto}
 @media (prefers-reduced-motion:reduce){.floating-whatsapp{transition:none!important}}
+
+
+/* Floating WhatsApp uses only the transparent supplied mark */
+.floating-whatsapp{background:transparent;box-shadow:none}.floating-whatsapp:hover{background:transparent}
