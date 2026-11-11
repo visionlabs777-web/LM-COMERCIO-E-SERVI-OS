@@ -18,3 +18,8 @@
 @media (prefers-reduced-motion:reduce){.cursor-spotlight,.card-spotlight{display:none}.button,.floating-whatsapp{transition:none!important}}
 
 .cursor-spotlight-core{z-index:7;width:72px;height:72px;left:-36px;top:-36px;opacity:.72;filter:blur(3px);box-shadow:0 0 18px rgba(232,111,45,.16);background:radial-gradient(circle,rgba(232,111,45,.28) 0%,rgba(232,111,45,.1) 42%,rgba(232,111,45,0) 74%)}.cursor-spotlight-trail{z-index:6;opacity:0;width:54px;height:54px;left:-27px;top:-27px;filter:blur(3px);mix-blend-mode:normal;background:radial-gradient(circle,rgba(232,111,45,.16) 0%,rgba(232,111,45,.06) 42%,rgba(232,111,45,0) 74%)}.cursor-spotlight-core.is-active{opacity:.74}.cursor-spotlight-trail.is-active{opacity:.34}.cursor-spotlight-trail-2{width:42px;height:42px;left:-21px;top:-21px;opacity:.2}.cursor-spotlight-trail-3{width:30px;height:30px;left:-15px;top:-15px;opacity:.12}
+
+
+/* Social placeholders and official WhatsApp mark */
+.footer-socials{display:flex;flex-direction:column;gap:7px;margin-top:11px}.footer-social-label{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#686868}.social-button{display:inline-flex;align-items:center;gap:8px;width:max-content;padding:0;border:0;background:transparent;color:#777;cursor:not-allowed;font-size:12px;text-align:left}.social-button:disabled{opacity:.72}.social-button svg{color:#8a8a8a}.floating-whatsapp{background:#fff;transition:width .25s,background .25s}.floating-whatsapp:hover{background:#fff}.floating-whatsapp img{width:31px;height:31px;object-fit:contain;flex:0 0 auto}
+@media (prefers-reduced-motion:reduce){.floating-whatsapp{transition:none!important}}

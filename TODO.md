@@ -92,3 +92,9 @@
 - [x] Definir o slot 3 como Dedetização & desratização.
 - [x] Substituir a imagem do card de Sanitização por `sanitizacao-ambientes.webp`, usando o arquivo oficial anexado.
 - [x] Validar no Preview os três títulos, índices e caminhos de imagem na ordem solicitada.
+
+
+## Redes sociais e identidade do WhatsApp
+- [x] Adicionar botões visuais de Instagram e TikTok no rodapé, sem direcionamento até o usuário informar as contas oficiais.
+- [x] Substituir o ícone genérico do botão flutuante pelo logo oficial do WhatsApp fornecido em `BOTAO.eps`, convertido para `public/assets/whatsapp-button.png` sem alterar o original.
+- [x] Manter os botões sociais acessíveis, responsivos e claramente identificados como disponíveis em breve.

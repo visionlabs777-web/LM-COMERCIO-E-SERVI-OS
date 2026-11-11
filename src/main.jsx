@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { motion, MotionConfig, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
-import { IconArrowDown as ArrowDown, IconArrowUpRight as ArrowUpRight, IconMessageCircle as MessageCircle, IconX as X } from '@tabler/icons-react';
+import { IconArrowDown as ArrowDown, IconArrowUpRight as ArrowUpRight, IconBrandInstagram as Instagram, IconBrandTiktok as Tiktok, IconMessageCircle as MessageCircle, IconX as X } from '@tabler/icons-react';
 import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
 import './styles.css';
 
@@ -198,11 +198,11 @@ function Contact() {
 }
 
 function Footer() {
-  return <footer className="site-footer"><div className="container footer-grid"><div className="footer-brand"><img src="/assets/logotipo.png" alt="LM Comércio e Serviços" /><p>Serviços para conservar, cuidar e manter.</p></div><div><p className="footer-label">Navegação</p><a href="#solucoes">Soluções</a><a href="#complementares">Manutenção</a><a href="#trabalhos">Trabalhos</a></div><div><p className="footer-label">Contato</p><a href="tel:+5511947231234">(11) 94723-1234</a><a href={waLink('Olá! Gostaria de falar com a LM Comércio e Serviços.')} target="_blank" rel="noreferrer">WhatsApp <ArrowUpRight size={14} /></a></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} LM Comércio e Serviços</span><span>Conservação, manutenção e cuidado.</span></div></footer>;
+  return <footer className="site-footer"><div className="container footer-grid"><div className="footer-brand"><img src="/assets/logotipo.png" alt="LM Comércio e Serviços" /><p>Serviços para conservar, cuidar e manter.</p></div><div><p className="footer-label">Navegação</p><a href="#solucoes">Soluções</a><a href="#complementares">Manutenção</a><a href="#trabalhos">Trabalhos</a></div><div><p className="footer-label">Contato</p><a href="tel:+5511947231234">(11) 94723-1234</a><a href={waLink('Olá! Gostaria de falar com a LM Comércio e Serviços.')} target="_blank" rel="noreferrer">WhatsApp <ArrowUpRight size={14} /></a><div className="footer-socials" aria-label="Redes sociais"><span className="footer-social-label">Em breve</span><button className="social-button" type="button" disabled aria-label="Instagram da LM Comércio e Serviços — link em breve"><Instagram size={17} /><span>Instagram</span></button><button className="social-button" type="button" disabled aria-label="TikTok da LM Comércio e Serviços — link em breve"><Tiktok size={17} /><span>TikTok</span></button></div></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} LM Comércio e Serviços</span><span>Conservação, manutenção e cuidado.</span></div></footer>;
 }
 
 function App() {
-  return <MotionConfig reducedMotion="user"><SpotlightCursor /><ScrollProgress /><Header /><main><Hero /><Intro /><Services /><Complementary /><Audience /><Gallery /><Contact /></main><Footer /><MagneticLink className="floating-whatsapp" href={waLink('Olá! Gostaria de falar com a LM Comércio e Serviços.')} target="_blank" rel="noreferrer" aria-label="Falar com a LM pelo WhatsApp"><MessageCircle size={25} /><small>Fale com a LM</small></MagneticLink></MotionConfig>;
+  return <MotionConfig reducedMotion="user"><SpotlightCursor /><ScrollProgress /><Header /><main><Hero /><Intro /><Services /><Complementary /><Audience /><Gallery /><Contact /></main><Footer /><MagneticLink className="floating-whatsapp" href={waLink('Olá! Gostaria de falar com a LM Comércio e Serviços.')} target="_blank" rel="noreferrer" aria-label="Falar com a LM pelo WhatsApp"><img src="/assets/whatsapp-button.png" alt="" /><small>Fale com a LM</small></MagneticLink></MotionConfig>;
 }
 
 createRoot(document.getElementById('app')).render(<App />);
