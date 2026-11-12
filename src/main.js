@@ -37,11 +37,11 @@ const complementary = [
 
 const gallery = [
   ['/assets/trabalho-fachada-altura.jpg', 'Manutenção em altura'],
-  ['/assets/trabalho-video-1.mp4', 'Vídeo: Serviço em campo'],
+  ['/assets/trabalho-video-1.mp4', 'Vídeo: Serviço em campo', '/assets/trabalho-video-1-poster.jpg'],
   ['/assets/limpeza-caixa-agua-1.jpeg', 'Limpeza de caixa d’água'],
   ['/assets/dedetizacao.jpeg', 'Dedetização'],
   ['/assets/trabalho-totem-sadef.jpg', 'Instalação de totem'],
-  ['/assets/trabalho-video-2.mp4', 'Vídeo: Manutenção em campo'],
+  ['/assets/trabalho-video-2.mp4', 'Vídeo: Manutenção em campo', '/assets/trabalho-video-2-poster.jpg'],
   ['/assets/eletrica-4.jpeg', 'Serviço elétrico'],
   ['/assets/limpeza-caixa-agua-2.jpeg', 'Limpeza de caixa d’água'],
   ['/assets/ar-condicionado-2.jpeg', 'Ar-condicionado'],

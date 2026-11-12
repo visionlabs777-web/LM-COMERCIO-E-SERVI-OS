@@ -24,11 +24,11 @@ const complementary = [
 
 const gallery = [
   ['/assets/trabalho-fachada-altura.jpg', 'Manutenção em altura'],
-  ['/assets/trabalho-video-1.mp4', 'Vídeo: Serviço em campo'],
+  ['/assets/trabalho-video-1.mp4', 'Vídeo: Serviço em campo', '/assets/trabalho-video-1-poster.jpg'],
   ['/assets/limpeza-caixa-agua-1.jpeg', 'Limpeza de caixa d’água'],
   ['/assets/dedetizacao.jpeg', 'Dedetização'],
   ['/assets/trabalho-totem-sadef.jpg', 'Instalação de totem'],
-  ['/assets/trabalho-video-2.mp4', 'Vídeo: Manutenção em campo'],
+  ['/assets/trabalho-video-2.mp4', 'Vídeo: Manutenção em campo', '/assets/trabalho-video-2-poster.jpg'],
   ['/assets/eletrica-4.jpeg', 'Serviço elétrico'],
   ['/assets/limpeza-caixa-agua-2.jpeg', 'Limpeza de caixa d’água'],
   ['/assets/ar-condicionado-2.jpeg', 'Ar-condicionado'],
@@ -192,24 +192,35 @@ function Audience() {
 }
 
 function Gallery() {
-  return <section className="work section" id="trabalhos"><div className="container"><Reveal className="section-heading split-heading"><div><div className="section-label"><span>05</span><span className="label-line" /><span>Trabalhos realizados</span></div><p className="kicker">Um pouco do nosso trabalho</p><h2>Presença, cuidado e <em>resultado.</em></h2></div><p className="heading-note dark-note">Uma seleção de registros enviados pela LM para mostrar a variedade de serviços que fazem parte da nossa rotina.</p></Reveal><div className="gallery-grid">{gallery.map(([image, alt], index) => <GalleryItem key={`${image}-${index}`} image={image} alt={alt} index={index} />)}</div></div></section>;
+  return <section className="work section" id="trabalhos"><div className="container"><Reveal className="section-heading split-heading"><div><div className="section-label"><span>05</span><span className="label-line" /><span>Trabalhos realizados</span></div><p className="kicker">Um pouco do nosso trabalho</p><h2>Presença, cuidado e <em>resultado.</em></h2></div><p className="heading-note dark-note">Uma seleção de registros enviados pela LM para mostrar a variedade de serviços que fazem parte da nossa rotina.</p></Reveal><div className="gallery-grid">{gallery.map(([image, alt, poster], index) => <GalleryItem key={`${image}-${index}`} image={image} alt={alt} poster={poster} index={index} />)}</div></div></section>;
 }
 
-function GalleryItem({ image, alt, index }) {
+function GalleryItem({ image, alt, poster, index }) {
   const [open, setOpen] = useState(false);
   const isVideo = image.endsWith('.mp4');
   const use3D = !isVideo && [0, 4, 8].includes(index);
   const media = isVideo ? (
     <div className="gallery-video-wrapper">
-      <video src={image} autoPlay muted loop playsInline preload="metadata" />
-      <span className="video-badge"><Play size={12} /> Vídeo</span>
+      <video
+        src={image}
+        poster={poster}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+      />
+      <div className="video-overlay-play">
+        <span className="video-play-btn" aria-hidden="true"><Play size={20} /></span>
+      </div>
+      <span className="video-badge"><Play size={11} /> Vídeo</span>
     </div>
   ) : use3D ? (
     <ThreeDImageCard image={image} alt={alt} className="gallery-3d" />
   ) : (
     <img src={image} alt={alt} loading="lazy" decoding="async" />
   );
-  return <Reveal className={`gallery-item gallery-item-${index + 1} ${isVideo ? 'is-video' : ''}`} delay={index * 0.04}><button type="button" aria-label={isVideo ? `Assistir vídeo: ${alt}` : `Ampliar foto: ${alt}`} onClick={() => setOpen(true)}>{media}<span>{alt} <ArrowUpRight size={16} /></span></button>{open && <div className="gallery-lightbox" role="dialog" aria-modal="true" aria-label={isVideo ? `Vídeo: ${alt}` : `Imagem ampliada: ${alt}`} onClick={() => setOpen(false)}><button type="button" className="lightbox-close" aria-label="Fechar" onClick={() => setOpen(false)}><X size={30} /></button>{isVideo ? <video src={image} controls autoPlay playsInline className="gallery-lightbox-video" onClick={(e) => e.stopPropagation()} /> : <img src={image} alt={alt} />}</div>}</Reveal>;
+  return <Reveal className={`gallery-item gallery-item-${index + 1} ${isVideo ? 'is-video' : ''}`} delay={index * 0.04}><button type="button" aria-label={isVideo ? `Assistir vídeo: ${alt}` : `Ampliar foto: ${alt}`} onClick={() => setOpen(true)}>{media}<span>{alt} <ArrowUpRight size={16} /></span></button>{open && <div className="gallery-lightbox" role="dialog" aria-modal="true" aria-label={isVideo ? `Vídeo: ${alt}` : `Imagem ampliada: ${alt}`} onClick={() => setOpen(false)}><button type="button" className="lightbox-close" aria-label="Fechar" onClick={() => setOpen(false)}><X size={30} /></button>{isVideo ? <video src={image} poster={poster} controls autoPlay playsInline className="gallery-lightbox-video" onClick={(e) => e.stopPropagation()} /> : <img src={image} alt={alt} />}</div>}</Reveal>;
 }
 
 const initialReviews = [
