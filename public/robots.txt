@@ -1,0 +1,6 @@
+# Robots.txt — LM Comércio e Serviços
+User-agent: *
+Allow: /
+
+# Sitemap oficial
+Sitemap: https://manutencaolm.com.br/sitemap.xml

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { motion, MotionConfig, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
-import { IconArrowDown as ArrowDown, IconArrowUpRight as ArrowUpRight, IconBrandInstagram as Instagram, IconBrandTiktok as Tiktok, IconCheck as IconCheck, IconMessageCircle as MessageCircle, IconPlus as IconPlus, IconQuote as IconQuote, IconStar as IconStar, IconStarFilled as IconStarFilled, IconX as X } from '@tabler/icons-react';
+import { IconArrowDown as ArrowDown, IconArrowUpRight as ArrowUpRight, IconBrandInstagram as Instagram, IconBrandTiktok as Tiktok, IconCheck as IconCheck, IconMessageCircle as MessageCircle, IconPlayerPlay as Play, IconPlus as IconPlus, IconQuote as IconQuote, IconStar as IconStar, IconStarFilled as IconStarFilled, IconX as X } from '@tabler/icons-react';
 import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
 import './styles.css';
 
@@ -9,9 +9,9 @@ const WHATSAPP = '5511947231234';
 const waLink = (message) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(message)}`;
 
 const services = [
-  { eyebrow: 'Cuidado essencial', title: 'Limpeza de caixas d’água', text: 'Higienização cuidadosa para apoiar a rotina e a conservação do seu espaço.', image: '/assets/banner-caixa-agua-sanitizacao.png', message: 'Olá! Gostaria de solicitar um orçamento para limpeza de caixa d’água.' },
-  { eyebrow: 'Ambientes bem cuidados', title: 'Sanitização', text: 'Mais cuidado para áreas de uso coletivo, com uma solução prática e profissional.', image: '/assets/sanitizacao-ambientes.webp', message: 'Olá! Gostaria de solicitar um orçamento para sanitização.' },
-  { eyebrow: 'Controle e prevenção', title: 'Dedetização & desratização', text: 'Ambientes mais protegidos com atendimento organizado para condomínios, escolas e empresas.', image: '/assets/banner-dedetizacao-desratizacao.png', message: 'Olá! Gostaria de solicitar um orçamento para dedetização e desratização.' }
+  { eyebrow: 'Cuidado essencial', title: 'Limpeza de caixas d’água', text: 'Higienização cuidadosa para apoiar a rotina e a conservação do seu espaço.', image: '/assets/banner-caixa-agua-novo.jpg', message: 'Olá! Gostaria de solicitar um orçamento para limpeza de caixa d’água.' },
+  { eyebrow: 'Ambientes bem cuidados', title: 'Sanitização', text: 'Mais cuidado para áreas de uso coletivo, com uma solução prática e profissional.', image: '/assets/banner-sanitizacao-novo.jpg', message: 'Olá! Gostaria de solicitar um orçamento para sanitização.' },
+  { eyebrow: 'Controle e prevenção', title: 'Dedetização & desratização', text: 'Ambientes mais protegidos com atendimento organizado para condomínios, escolas e empresas.', image: '/assets/banner-dedetizacao-novo.jpg', message: 'Olá! Gostaria de solicitar um orçamento para dedetização e desratização.' }
 ];
 
 const complementary = [
@@ -23,10 +23,18 @@ const complementary = [
 ];
 
 const gallery = [
-  ['/assets/dedetizacao-2.jpeg', 'Dedetização'], ['/assets/dedetizacao.jpeg', 'Dedetização'],
-  ['/assets/limpeza-caixa-agua-1.jpeg', 'Limpeza de caixa d’água'], ['/assets/limpeza-caixa-agua-2.jpeg', 'Limpeza de caixa d’água'],
-  ['/assets/eletrica-4.jpeg', 'Serviço elétrico'], ['/assets/eletrica-5.jpeg', 'Serviço elétrico'],
-  ['/assets/eletrica-6.jpeg', 'Serviço elétrico'], ['/assets/ar-condicionado-2.jpeg', 'Ar-condicionado'], ['/assets/manutencao.jpeg', 'Manutenção']
+  ['/assets/trabalho-fachada-altura.jpg', 'Manutenção em altura'],
+  ['/assets/trabalho-video-1.mp4', 'Vídeo: Serviço em campo'],
+  ['/assets/limpeza-caixa-agua-1.jpeg', 'Limpeza de caixa d’água'],
+  ['/assets/dedetizacao.jpeg', 'Dedetização'],
+  ['/assets/trabalho-totem-sadef.jpg', 'Instalação de totem'],
+  ['/assets/trabalho-video-2.mp4', 'Vídeo: Manutenção em campo'],
+  ['/assets/eletrica-4.jpeg', 'Serviço elétrico'],
+  ['/assets/limpeza-caixa-agua-2.jpeg', 'Limpeza de caixa d’água'],
+  ['/assets/ar-condicionado-2.jpeg', 'Ar-condicionado'],
+  ['/assets/eletrica-5.jpeg', 'Serviço elétrico'],
+  ['/assets/manutencao.jpeg', 'Manutenção'],
+  ['/assets/eletrica-6.jpeg', 'Serviço elétrico']
 ];
 
 const viewport = { once: true, amount: 0.14 };
@@ -116,13 +124,13 @@ function ParallaxImage({ src, alt }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], [-14, 14]);
-  return <motion.img ref={ref} src={src} alt={alt} loading="lazy" style={{ y }} />;
+  return <motion.img ref={ref} src={src} alt={alt} loading="lazy" decoding="async" style={{ y }} />;
 }
 
 function ThreeDImageCard({ image, alt, className = '' }) {
   return <CardContainer containerClassName={`aceternity-container ${className}`} className="aceternity-card" data-3d-card>
     <CardBody className="aceternity-card-body">
-      <CardItem translateZ={28} className="aceternity-card-media"><img src={image} alt={alt} loading="lazy" /></CardItem>
+      <CardItem translateZ={28} className="aceternity-card-media"><img src={image} alt={alt} loading="lazy" decoding="async" /></CardItem>
     </CardBody>
   </CardContainer>;
 }
@@ -132,6 +140,7 @@ function Header() {
   const close = () => setOpen(false);
   return <header className="site-header" id="topo">
     <div className="container nav-wrap">
+      {/* Logo com escrita atualizada */}
       <a className="brand" href="#topo" aria-label="LM Comércio e Serviços — início"><img src="/assets/logotipo.png" alt="LM Comércio e Serviços" /></a>
       <button className="menu-toggle" type="button" aria-expanded={open} aria-controls="main-nav" onClick={() => setOpen(!open)}>{open ? <X size={18} /> : 'Menu'} <span>{open ? '' : '+'}</span></button>
       <nav id="main-nav" className={`main-nav ${open ? 'is-open' : ''}`} aria-label="Navegação principal">
@@ -158,7 +167,7 @@ function Hero() {
         </motion.div>
       </motion.div>
       <motion.div className="hero-visual" initial={{ opacity: 0, x: 26 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.85, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}>
-        <div className="hero-visual-frame"><motion.img src="/assets/dedetizacao-2.jpeg" alt="Profissional realizando dedetização em uma residência" /></div>
+        <div className="hero-visual-frame"><motion.img src="/assets/dedetizacao-2.jpeg" alt="Profissional realizando dedetização em uma residência" fetchPriority="high" decoding="async" /></div>
         <div className="hero-visual-meta"><span>01</span><span>Dedetização &amp; desratização</span><span className="meta-rule" /></div>
       </motion.div>
     </div>
@@ -188,9 +197,19 @@ function Gallery() {
 
 function GalleryItem({ image, alt, index }) {
   const [open, setOpen] = useState(false);
-  const use3D = [0, 3, 7].includes(index);
-  const media = use3D ? <ThreeDImageCard image={image} alt={alt} className="gallery-3d" /> : <img src={image} alt={alt} loading="lazy" />;
-  return <Reveal className={`gallery-item gallery-item-${index + 1}`} delay={index * 0.045}><button type="button" aria-label={`Ampliar foto: ${alt}`} onClick={() => setOpen(true)}>{media}<span>{alt} <ArrowUpRight size={16} /></span></button>{open && <div className="gallery-lightbox" role="dialog" aria-modal="true" aria-label={`Imagem ampliada: ${alt}`} onClick={() => setOpen(false)}><button type="button" className="lightbox-close" aria-label="Fechar imagem" onClick={() => setOpen(false)}><X size={30} /></button><img src={image} alt={alt} /></div>}</Reveal>;
+  const isVideo = image.endsWith('.mp4');
+  const use3D = !isVideo && [0, 4, 8].includes(index);
+  const media = isVideo ? (
+    <div className="gallery-video-wrapper">
+      <video src={image} autoPlay muted loop playsInline preload="metadata" />
+      <span className="video-badge"><Play size={12} /> Vídeo</span>
+    </div>
+  ) : use3D ? (
+    <ThreeDImageCard image={image} alt={alt} className="gallery-3d" />
+  ) : (
+    <img src={image} alt={alt} loading="lazy" decoding="async" />
+  );
+  return <Reveal className={`gallery-item gallery-item-${index + 1} ${isVideo ? 'is-video' : ''}`} delay={index * 0.04}><button type="button" aria-label={isVideo ? `Assistir vídeo: ${alt}` : `Ampliar foto: ${alt}`} onClick={() => setOpen(true)}>{media}<span>{alt} <ArrowUpRight size={16} /></span></button>{open && <div className="gallery-lightbox" role="dialog" aria-modal="true" aria-label={isVideo ? `Vídeo: ${alt}` : `Imagem ampliada: ${alt}`} onClick={() => setOpen(false)}><button type="button" className="lightbox-close" aria-label="Fechar" onClick={() => setOpen(false)}><X size={30} /></button>{isVideo ? <video src={image} controls autoPlay playsInline className="gallery-lightbox-video" onClick={(e) => e.stopPropagation()} /> : <img src={image} alt={alt} />}</div>}</Reveal>;
 }
 
 const initialReviews = [
@@ -604,7 +623,7 @@ function Footer() {
 }
 
 function App() {
-  return <MotionConfig reducedMotion="user"><SpotlightCursor /><ScrollProgress /><Header /><main><Hero /><Intro /><Services /><Complementary /><Audience /><Gallery /><Reviews /><Contact /></main><Footer /><MagneticLink className="floating-whatsapp" href={waLink('Olá! Gostaria de falar com a LM Comércio e Serviços.')} target="_blank" rel="noreferrer" aria-label="Falar com a LM pelo WhatsApp"><img src="/assets/whatsapp-button.png" alt="" /><small>Fale com a LM</small></MagneticLink></MotionConfig>;
+  return <MotionConfig reducedMotion="user"><SpotlightCursor /><ScrollProgress /><Header /><main><Hero /><Intro /><Services /><Complementary /><Audience /><Gallery /><Reviews /><Contact /></main><Footer /><MagneticLink className="floating-whatsapp" href={waLink('Olá! Gostaria de falar com a LM Comércio e Serviços.')} target="_blank" rel="noreferrer" aria-label="Falar com a LM pelo WhatsApp"><img src="/assets/whatsapp-button.png" alt="Ícone do WhatsApp" /><small>Fale com a LM</small></MagneticLink></MotionConfig>;
 }
 
 createRoot(document.getElementById('app')).render(<App />);

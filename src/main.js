@@ -8,14 +8,14 @@ const services = [
     eyebrow: 'Controle e prevenção',
     title: 'Dedetização & desratização',
     text: 'Ambientes mais protegidos com atendimento organizado para condomínios, escolas e empresas.',
-    image: '/assets/banner-dedetizacao-desratizacao.png',
+    image: '/assets/banner-dedetizacao-novo.jpg',
     message: 'Olá! Gostaria de solicitar um orçamento para dedetização e desratização.'
   },
   {
     eyebrow: 'Cuidado essencial',
     title: 'Limpeza de caixas d’água',
     text: 'Higienização cuidadosa para apoiar a rotina e a conservação do seu espaço.',
-    image: '/assets/banner-caixa-agua-sanitizacao.png',
+    image: '/assets/banner-caixa-agua-novo.jpg',
     message: 'Olá! Gostaria de solicitar um orçamento para limpeza de caixa d’água.'
   },
   {
@@ -36,15 +36,18 @@ const complementary = [
 ];
 
 const gallery = [
-  ['/assets/dedetizacao-2.jpeg', 'Dedetização'],
-  ['/assets/dedetizacao.jpeg', 'Dedetização'],
+  ['/assets/trabalho-fachada-altura.jpg', 'Manutenção em altura'],
+  ['/assets/trabalho-video-1.mp4', 'Vídeo: Serviço em campo'],
   ['/assets/limpeza-caixa-agua-1.jpeg', 'Limpeza de caixa d’água'],
-  ['/assets/limpeza-caixa-agua-2.jpeg', 'Limpeza de caixa d’água'],
+  ['/assets/dedetizacao.jpeg', 'Dedetização'],
+  ['/assets/trabalho-totem-sadef.jpg', 'Instalação de totem'],
+  ['/assets/trabalho-video-2.mp4', 'Vídeo: Manutenção em campo'],
   ['/assets/eletrica-4.jpeg', 'Serviço elétrico'],
-  ['/assets/eletrica-5.jpeg', 'Serviço elétrico'],
-  ['/assets/eletrica-6.jpeg', 'Serviço elétrico'],
+  ['/assets/limpeza-caixa-agua-2.jpeg', 'Limpeza de caixa d’água'],
   ['/assets/ar-condicionado-2.jpeg', 'Ar-condicionado'],
-  ['/assets/manutencao.jpeg', 'Manutenção']
+  ['/assets/eletrica-5.jpeg', 'Serviço elétrico'],
+  ['/assets/manutencao.jpeg', 'Manutenção'],
+  ['/assets/eletrica-6.jpeg', 'Serviço elétrico']
 ];
 
 const app = document.querySelector('#app');
