@@ -1,92 +1,149 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { motion, MotionConfig, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
-import { IconArrowDown as ArrowDown, IconArrowUpRight as ArrowUpRight, IconBrandInstagram as Instagram, IconBrandTiktok as Tiktok, IconCheck as IconCheck, IconMessageCircle as MessageCircle, IconPlayerPlay as Play, IconPlus as IconPlus, IconQuote as IconQuote, IconStar as IconStar, IconStarFilled as IconStarFilled, IconX as X } from '@tabler/icons-react';
+import {
+  IconAlertTriangle as AlertTriangle,
+  IconArrowDown as ArrowDown,
+  IconArrowRight as ArrowRight,
+  IconArrowUpRight as ArrowUpRight,
+  IconBrandInstagram as Instagram,
+  IconBrandTiktok as Tiktok,
+  IconBuildingSkyscraper as Building,
+  IconCertificate as Certificate,
+  IconCheck as IconCheck,
+  IconClock as Clock,
+  IconDroplet as Droplet,
+  IconExternalLink as ExternalLink,
+  IconFileCertificate as FileCertificate,
+  IconMessageCircle as MessageCircle,
+  IconPhoneCall as PhoneCall,
+  IconPlayerPlay as Play,
+  IconPlus as IconPlus,
+  IconQuote as IconQuote,
+  IconShieldCheck as ShieldCheck,
+  IconSparkles as Sparkles,
+  IconStar as IconStar,
+  IconStarFilled as IconStarFilled,
+  IconTools as Tools,
+  IconX as X
+} from '@tabler/icons-react';
 import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
 import './styles.css';
 
+/* =========================================================
+   CONSTANTES E MENSAGENS OFICIAIS DE CONVERSÃO (WHATSAPP)
+   ========================================================= */
 const WHATSAPP = '5511947231234';
 const waLink = (message) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(message)}`;
 
-const services = [
-  { eyebrow: 'Cuidado essencial', title: 'Limpeza de caixas d’água', text: 'Higienização cuidadosa para apoiar a rotina e a conservação do seu espaço.', image: '/assets/banner-caixa-agua-novo.jpg', message: 'Olá! Gostaria de solicitar um orçamento para limpeza de caixa d’água.' },
-  { eyebrow: 'Ambientes bem cuidados', title: 'Sanitização', text: 'Mais cuidado para áreas de uso coletivo, com uma solução prática e profissional.', image: '/assets/banner-sanitizacao-novo.jpg', message: 'Olá! Gostaria de solicitar um orçamento para sanitização.' },
-  { eyebrow: 'Controle e prevenção', title: 'Dedetização & desratização', text: 'Ambientes mais protegidos com atendimento organizado para condomínios, escolas e empresas.', image: '/assets/banner-dedetizacao-novo.jpg', message: 'Olá! Gostaria de solicitar um orçamento para dedetização e desratização.' }
+// Mensagens contextuais padronizadas
+const WA_MSGS = {
+  emergency: 'Olá! Sou responsável por um condomínio e preciso de atendimento emergencial. Gostaria de falar com um atendente.',
+  generalQuote: 'Olá! Sou responsável por um condomínio e gostaria de solicitar um orçamento para a LM Comércio e Serviços.',
+  dedetizacao: 'Olá! Gostaria de solicitar um orçamento para dedetização e desratização no meu condomínio.',
+  caixaAgua: 'Olá! Gostaria de solicitar um orçamento para limpeza e desinfecção de caixa d’água no meu condomínio.',
+  sanitizacao: 'Olá! Gostaria de solicitar um orçamento para sanitização de ambientes no meu condomínio.',
+  altura: 'Olá! Gostaria de solicitar um orçamento para serviços em altura no meu condomínio.',
+  manutencao: 'Olá! Gostaria de solicitar um orçamento para pequenos reparos e manutenção no meu condomínio.',
+  qualificacao: 'Olá! Gostaria de falar com a equipe técnica da LM sobre as qualificações (NRs e ART) para serviços no condomínio.'
+};
+
+/* =========================================================
+   DADOS DE SERVIÇOS E CONTEÚDOS OFICIAIS
+   ========================================================= */
+const mainServices = [
+  {
+    eyebrow: 'Higienização e potabilidade',
+    title: 'Limpeza de caixas d’água',
+    text: 'Desinfecção profunda com métodos seguros (NR-33), laudos técnicos de conformidade e fotos de antes/depois para prestação de contas.',
+    image: '/assets/banner-caixa-agua-novo.jpg',
+    tag: 'Saúde e Conformidade Sanitária',
+    message: WA_MSGS.caixaAgua
+  },
+  {
+    eyebrow: 'Controle e prevenção contínua',
+    title: 'Dedetização & desratização',
+    text: 'Proteção preventiva e corretiva para garagens, galerias, áreas comuns e lixeiras. Produtos homologados e certificados para a vigilância.',
+    image: '/assets/banner-dedetizacao-novo.jpg',
+    tag: 'Certificado de Garantia',
+    message: WA_MSGS.dedetizacao
+  },
+  {
+    eyebrow: 'Proteção para áreas coletivas',
+    title: 'Sanitização de ambientes',
+    text: 'Aplicação técnica em elevadores, halls, academias, salões de festas e portarias. Ambientes seguros e livres de patógenos com zero odor residual.',
+    image: '/assets/banner-sanitizacao-novo.jpg',
+    tag: 'Áreas de Alto Fluxo',
+    message: WA_MSGS.sanitizacao
+  }
 ];
 
-const complementary = [
-  ['Manutenção predial leve', 'Pequenos reparos e cuidados que ajudam a manter a operação em dia.', '/assets/manutencao.jpeg'],
-  ['Serviços hidráulicos', 'Apoio para ajustes e necessidades hidráulicas do cotidiano.', '/assets/limpeza-caixa-agua-1.jpeg'],
-  ['Serviços elétricos', 'Execução cuidadosa para reparos e melhorias elétricas.', '/assets/eletrica.jpeg'],
-  ['Ar-condicionado', 'Manutenção para apoiar conforto e funcionamento dos ambientes.', '/assets/ar-condicionado.jpeg'],
-  ['Pequenos reparos', 'Uma equipe parceira para resolver diferentes demandas de conservação.', '/assets/eletrica-7.jpeg']
+const maintenanceServices = [
+  {
+    title: 'Serviços hidráulicos',
+    text: 'Ajustes de bombas, registros gerais, vazamentos em colunas e manutenção de barriletes.',
+    image: '/assets/limpeza-caixa-agua-1.jpeg'
+  },
+  {
+    title: 'Serviços elétricos',
+    text: 'Quadros de comando, iluminação de emergência, disjuntores e pequenos reparos elétricos.',
+    image: '/assets/eletrica.jpeg'
+  },
+  {
+    title: 'Ar-condicionado',
+    text: 'Manutenção preventiva e corretiva para portarias, salas administrativas e salões.',
+    image: '/assets/ar-condicionado.jpeg'
+  },
+  {
+    title: 'Manutenção predial leve',
+    text: 'Pintura pontual, reparos de alvenaria e conservação contínua da estrutura predial.',
+    image: '/assets/manutencao.jpeg'
+  },
+  {
+    title: 'Pequenos reparos do cotidiano',
+    text: 'Agilidade para solucionar aquelas demandas acumuladas que geram queixas de moradores.',
+    image: '/assets/eletrica-7.jpeg'
+  }
 ];
 
 const gallery = [
-  ['/assets/trabalho-fachada-altura.jpg', 'Manutenção em altura'],
+  ['/assets/trabalho-fachada-altura.jpg', 'Manutenção em altura com caminhão cesto'],
   ['/assets/trabalho-video-1.mp4', 'Vídeo: Serviço em campo', '/assets/trabalho-video-1-poster.jpg'],
-  ['/assets/limpeza-caixa-agua-1.jpeg', 'Limpeza de caixa d’água'],
-  ['/assets/dedetizacao.jpeg', 'Dedetização'],
-  ['/assets/trabalho-totem-sadef.jpg', 'Instalação de totem'],
+  ['/assets/limpeza-caixa-agua-1.jpeg', 'Limpeza técnica de caixa d’água'],
+  ['/assets/dedetizacao.jpeg', 'Dedetização preventiva em áreas comuns'],
+  ['/assets/trabalho-totem-sadef.jpg', 'Instalação e alinhamento de totem'],
   ['/assets/trabalho-video-2.mp4', 'Vídeo: Manutenção em campo', '/assets/trabalho-video-2-poster.jpg'],
-  ['/assets/eletrica-4.jpeg', 'Serviço elétrico'],
-  ['/assets/limpeza-caixa-agua-2.jpeg', 'Limpeza de caixa d’água'],
-  ['/assets/ar-condicionado-2.jpeg', 'Ar-condicionado'],
-  ['/assets/eletrica-5.jpeg', 'Serviço elétrico'],
-  ['/assets/manutencao.jpeg', 'Manutenção'],
-  ['/assets/eletrica-6.jpeg', 'Serviço elétrico']
+  ['/assets/eletrica-4.jpeg', 'Reparo e revisão elétrica'],
+  ['/assets/limpeza-caixa-agua-2.jpeg', 'Desinfecção de reservatório superior'],
+  ['/assets/ar-condicionado-2.jpeg', 'Manutenção de climatização predial'],
+  ['/assets/eletrica-5.jpeg', 'Revisão de quadro de disjuntores'],
+  ['/assets/manutencao.jpeg', 'Conservação e manutenção preventiva'],
+  ['/assets/eletrica-6.jpeg', 'Adequação de circuitos elétricos']
 ];
 
-const viewport = { once: true, amount: 0.14 };
 const revealVariants = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } };
 
-function Reveal({ children, className = '', delay = 0, amount = 0.14 }) {
+function Reveal({ children, className = '', delay = 0, amount = 0.12 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount });
-  return <motion.div ref={ref} className={className} initial="hidden" animate={isInView ? 'visible' : 'hidden'} variants={revealVariants} transition={{ duration: 0.68, delay, ease: [0.22, 1, 0.36, 1] }}>{children}</motion.div>;
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      initial="hidden"
+      animate={isInView ? 'visible' : 'hidden'}
+      variants={revealVariants}
+      transition={{ duration: 0.62, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
 }
 
 function ScrollProgress() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.18 });
   return <motion.div className="scroll-progress" style={{ scaleX }} aria-hidden="true" />;
-}
-
-function SpotlightCursor() {
-  const reduceMotion = useReducedMotion();
-  const x = useMotionValue(-180);
-  const y = useMotionValue(-180);
-  const springX = useSpring(x, { stiffness: 260, damping: 34, mass: 0.16 });
-  const springY = useSpring(y, { stiffness: 260, damping: 34, mass: 0.16 });
-  const trail1X = useSpring(x, { stiffness: 190, damping: 30, mass: 0.22 });
-  const trail1Y = useSpring(y, { stiffness: 190, damping: 30, mass: 0.22 });
-  const trail2X = useSpring(x, { stiffness: 125, damping: 25, mass: 0.3 });
-  const trail2Y = useSpring(y, { stiffness: 125, damping: 25, mass: 0.3 });
-  const trail3X = useSpring(x, { stiffness: 82, damping: 21, mass: 0.38 });
-  const trail3Y = useSpring(y, { stiffness: 82, damping: 21, mass: 0.38 });
-  const [active, setActive] = useState(false);
-
-  useEffect(() => {
-    const touchOnly = window.matchMedia('(hover: none) and (pointer: coarse)').matches && navigator.maxTouchPoints > 0;
-    if (reduceMotion || touchOnly) return undefined;
-    const handleMove = (event) => { x.set(event.clientX); y.set(event.clientY); setActive(true); };
-    const handleLeave = () => setActive(false);
-    window.addEventListener('pointermove', handleMove, { passive: true });
-    window.addEventListener('mousemove', handleMove, { passive: true });
-    document.addEventListener('pointermove', handleMove, { passive: true });
-    document.addEventListener('mousemove', handleMove, { passive: true });
-    document.documentElement.addEventListener('mouseleave', handleLeave);
-    return () => { window.removeEventListener('pointermove', handleMove); window.removeEventListener('mousemove', handleMove); document.removeEventListener('pointermove', handleMove); document.removeEventListener('mousemove', handleMove); document.documentElement.removeEventListener('mouseleave', handleLeave); };
-  }, [reduceMotion, x, y]);
-
-  if (reduceMotion) return null;
-  const state = active ? 'is-active' : '';
-  return <>
-    <motion.div className={`cursor-spotlight cursor-spotlight-trail cursor-spotlight-trail-3 ${state}`} style={{ x: trail3X, y: trail3Y }} aria-hidden="true" />
-    <motion.div className={`cursor-spotlight cursor-spotlight-trail cursor-spotlight-trail-2 ${state}`} style={{ x: trail2X, y: trail2Y }} aria-hidden="true" />
-    <motion.div className={`cursor-spotlight cursor-spotlight-trail cursor-spotlight-trail-1 ${state}`} style={{ x: trail1X, y: trail1Y }} aria-hidden="true" />
-    <motion.div className={`cursor-spotlight cursor-spotlight-core ${state}`} style={{ x: springX, y: springY }} aria-hidden="true" />
-  </>;
 }
 
 function MagneticLink({ children, className = '', ...props }) {
@@ -98,11 +155,23 @@ function MagneticLink({ children, className = '', ...props }) {
   const handleMove = (event) => {
     if (reduceMotion || event.pointerType === 'touch') return;
     const rect = event.currentTarget.getBoundingClientRect();
-    x.set((event.clientX - (rect.left + rect.width / 2)) * 0.16);
-    y.set((event.clientY - (rect.top + rect.height / 2)) * 0.16);
+    x.set((event.clientX - (rect.left + rect.width / 2)) * 0.14);
+    y.set((event.clientY - (rect.top + rect.height / 2)) * 0.14);
   };
   const reset = () => { x.set(0); y.set(0); };
-  return <motion.a {...props} className={className} onPointerMove={handleMove} onPointerLeave={reset} onFocus={reset} style={reduceMotion ? undefined : { x: springX, y: springY }} whileTap={reduceMotion ? undefined : { scale: 0.98 }}>{children}</motion.a>;
+  return (
+    <motion.a
+      {...props}
+      className={className}
+      onPointerMove={handleMove}
+      onPointerLeave={reset}
+      onFocus={reset}
+      style={reduceMotion ? undefined : { x: springX, y: springY }}
+      whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+    >
+      {children}
+    </motion.a>
+  );
 }
 
 function SpotlightSurface({ children, className = '' }) {
@@ -117,88 +186,593 @@ function SpotlightSurface({ children, className = '' }) {
     x.set(event.clientX - rect.left);
     y.set(event.clientY - rect.top);
   };
-  return <div className={`spotlight-surface ${className}`} onPointerMove={handleMove}><motion.span className="card-spotlight" style={{ x: springX, y: springY }} aria-hidden="true" />{children}</div>;
+  return (
+    <div className={`spotlight-surface ${className}`} onPointerMove={handleMove}>
+      <motion.span className="card-spotlight" style={{ x: springX, y: springY }} aria-hidden="true" />
+      {children}
+    </div>
+  );
 }
 
 function ParallaxImage({ src, alt }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  const y = useTransform(scrollYProgress, [0, 1], [-14, 14]);
+  const y = useTransform(scrollYProgress, [0, 1], [-12, 12]);
   return <motion.img ref={ref} src={src} alt={alt} loading="lazy" decoding="async" style={{ y }} />;
 }
 
 function ThreeDImageCard({ image, alt, className = '' }) {
-  return <CardContainer containerClassName={`aceternity-container ${className}`} className="aceternity-card" data-3d-card>
-    <CardBody className="aceternity-card-body">
-      <CardItem translateZ={28} className="aceternity-card-media"><img src={image} alt={alt} loading="lazy" decoding="async" /></CardItem>
-    </CardBody>
-  </CardContainer>;
+  return (
+    <CardContainer containerClassName={`aceternity-container ${className}`} className="aceternity-card" data-3d-card>
+      <CardBody className="aceternity-card-body">
+        <CardItem translateZ={26} className="aceternity-card-media">
+          <img src={image} alt={alt} loading="lazy" decoding="async" />
+        </CardItem>
+      </CardBody>
+    </CardContainer>
+  );
 }
 
-function Header() {
+/* =========================================================
+   1. HEADER DA PÁGINA (NAVEGAÇÃO PRINCIPAL)
+   ========================================================= */
+function Header({ onNavigateBio }) {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
-  return <header className="site-header" id="topo">
-    <div className="container nav-wrap">
-      {/* Logo com escrita atualizada */}
-      <a className="brand" href="#topo" aria-label="LM Comércio e Serviços — início"><img src="/assets/logotipo.png" alt="LM Comércio e Serviços" /></a>
-      <button className="menu-toggle" type="button" aria-expanded={open} aria-controls="main-nav" onClick={() => setOpen(!open)}>{open ? <X size={18} /> : 'Menu'} <span>{open ? '' : '+'}</span></button>
-      <nav id="main-nav" className={`main-nav ${open ? 'is-open' : ''}`} aria-label="Navegação principal">
-        <a href="#solucoes" onClick={close}>Soluções</a><a href="#complementares" onClick={close}>Manutenção</a><a href="#quem-atendemos" onClick={close}>Quem atendemos</a><a href="#trabalhos" onClick={close}>Trabalhos</a><a href="#avaliacoes" onClick={close}>Avaliações</a>
-        <MagneticLink className="nav-cta" href={waLink('Olá! Gostaria de solicitar um orçamento para a LM Comércio e Serviços.')} target="_blank" rel="noreferrer" onClick={close}><span>Fale com a LM</span> <ArrowUpRight size={15} /></MagneticLink>
-      </nav>
-    </div>
-  </header>;
+
+  return (
+    <header className="site-header" id="topo">
+      <div className="container nav-wrap">
+        <a className="brand" href="#topo" aria-label="LM Comércio e Serviços — Início">
+          <img src="/assets/logotipo.png" alt="LM Comércio e Serviços" width="210" height="69" />
+        </a>
+        <button
+          className="menu-toggle"
+          type="button"
+          aria-expanded={open}
+          aria-controls="main-nav"
+          onClick={() => setOpen(!open)}
+          aria-label={open ? 'Fechar menu de navegação' : 'Abrir menu de navegação'}
+        >
+          {open ? <X size={18} /> : 'Menu'} <span>{open ? '' : '+'}</span>
+        </button>
+        <nav id="main-nav" className={`main-nav ${open ? 'is-open' : ''}`} aria-label="Navegação principal">
+          <a href="#solucoes" onClick={close}>Soluções</a>
+          <a href="#manutencao" onClick={close}>Manutenção</a>
+          <a href="#altura" onClick={close}>Serviços em Altura</a>
+          <a href="#qualificacao" onClick={close}>Qualificação Técnica</a>
+          <a href="#diferenciais" onClick={close}>Diferenciais</a>
+          <a href="#trabalhos" onClick={close}>Trabalhos</a>
+          <a href="#avaliacoes" onClick={close}>Avaliações</a>
+          <button type="button" className="nav-bio-link" onClick={() => { close(); onNavigateBio(); }}>
+            Link na Bio <ArrowUpRight size={14} />
+          </button>
+          <MagneticLink
+            className="nav-cta"
+            href={waLink(WA_MSGS.emergency)}
+            target="_blank"
+            rel="noreferrer"
+            onClick={close}
+          >
+            <PhoneCall size={15} /> <span>Emergência 24h</span>
+          </MagneticLink>
+        </nav>
+      </div>
+    </header>
+  );
 }
 
+/* =========================================================
+   2. HERO SECTION — NOVO POSICIONAMENTO PARA SÍNDICOS
+   ========================================================= */
 function Hero() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
-  const imageY = useTransform(scrollYProgress, [0, 1], [0, 32]);
-  return <section ref={ref} className="hero" aria-labelledby="hero-title">
-    <div className="container hero-content">
-      <motion.div className="hero-copy" initial="hidden" animate="visible" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1, delayChildren: 0.15 } } }}>
-        <motion.p className="kicker light" variants={revealVariants}>LM Comércio e Serviços <span className="rule" /> Soluções para cuidar de cada detalhe.</motion.p>
-        <motion.h1 id="hero-title" variants={revealVariants}>Seu condomínio <em>em boas mãos.</em></motion.h1>
-        <motion.p className="hero-subtitle" variants={revealVariants}>Dedetização, limpeza de caixas d’água, sanitização e manutenção para condomínios, escolas e empresas.</motion.p>
-        <motion.div className="hero-actions" variants={revealVariants}>
-          <MagneticLink className="button button-primary" href={waLink('Olá! Gostaria de solicitar um orçamento para a LM Comércio e Serviços.')} target="_blank" rel="noreferrer">Solicitar orçamento <ArrowUpRight size={18} /></MagneticLink>
-          <MagneticLink className="button button-ghost" href="#solucoes">Conheça nossos serviços <ArrowDown size={17} /></MagneticLink>
+  const imageY = useTransform(scrollYProgress, [0, 1], [0, 28]);
+
+  return (
+    <section ref={ref} className="hero" aria-labelledby="hero-title">
+      <div className="container hero-content">
+        <motion.div
+          className="hero-copy"
+          initial="hidden"
+          animate="visible"
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1, delayChildren: 0.12 } } }}
+        >
+          <motion.div className="hero-badge-sindico" variants={revealVariants}>
+            <Building size={14} /> Parceira Estratégica de Síndicos e Administradoras
+          </motion.div>
+          <motion.h1 id="hero-title" variants={revealVariants}>
+            SÍNDICO, SEU CONDOMÍNIO <em>PRECISA DE SOLUÇÕES.</em> NÓS PODEMOS AJUDAR!
+          </motion.h1>
+          <motion.p className="hero-subtitle" variants={revealVariants}>
+            Dedetização, limpeza de caixas d’água, sanitização, serviços em altura e manutenção predial leve.
+            Segurança técnica, laudos de conformidade e equipe preparada para tirar o peso da sua rotina.
+          </motion.p>
+          <motion.div className="hero-actions" variants={revealVariants}>
+            <MagneticLink
+              className="button button-primary"
+              href={waLink(WA_MSGS.generalQuote)}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Solicitar orçamento <ArrowUpRight size={18} />
+            </MagneticLink>
+            <MagneticLink
+              className="button button-emergency"
+              href={waLink(WA_MSGS.emergency)}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <PhoneCall size={17} /> Atendimento emergencial
+            </MagneticLink>
+          </motion.div>
+          <motion.div className="hero-trust-bullets" variants={revealVariants}>
+            <span><IconCheck size={14} /> Laudos e certificados</span>
+            <span><IconCheck size={14} /> Equipe capacitada (NRs)</span>
+            <span><IconCheck size={14} /> ART conforme aplicabilidade</span>
+          </motion.div>
         </motion.div>
-      </motion.div>
-      <motion.div className="hero-visual" initial={{ opacity: 0, x: 26 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.85, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}>
-        <div className="hero-visual-frame"><motion.img src="/assets/dedetizacao-2.jpeg" alt="Profissional realizando dedetização em uma residência" fetchPriority="high" decoding="async" /></div>
-        <div className="hero-visual-meta"><span>01</span><span>Dedetização &amp; desratização</span><span className="meta-rule" /></div>
-      </motion.div>
-    </div>
-    <a className="scroll-cue" href="#apresentacao" aria-label="Rolar para apresentação"><span /> role para explorar</a>
-  </section>;
+
+        <motion.div
+          className="hero-visual"
+          initial={{ opacity: 0, x: 24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.85, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="hero-visual-frame">
+            <motion.img
+              src="/assets/dedetizacao-2.jpeg"
+              alt="Profissional técnico realizando serviço especializado em condomínio"
+              width="735"
+              height="490"
+              fetchPriority="high"
+              decoding="async"
+            />
+          </div>
+          <div className="hero-visual-meta">
+            <span>01</span>
+            <span>Atendimento especializado para condomínios</span>
+            <span className="meta-rule" />
+          </div>
+        </motion.div>
+      </div>
+      <a className="scroll-cue" href="#emergencia" aria-label="Rolar para atendimento emergencial">
+        <span /> Conheça nossas soluções
+      </a>
+    </section>
+  );
 }
 
-function Intro() {
-  return <section className="intro section" id="apresentacao"><div className="container intro-grid"><Reveal className="section-label"><span>01</span><span className="label-line" /><span>Sobre a LM</span></Reveal><Reveal className="intro-copy"><p className="kicker">Uma parceria que facilita a rotina</p><h2>Mais soluções para <em>cuidar do seu espaço.</em></h2><p className="lead">A LM Comércio e Serviços reúne serviços especializados, conservação e manutenção predial leve para tornar a rotina de condomínios, escolas e empresas mais simples.</p><p>Em vez de lidar com vários contatos, você encontra uma parceira para resolver diferentes necessidades do dia a dia com organização, proximidade e cuidado em cada atendimento.</p><a className="text-link" href="#solucoes">Descubra como podemos ajudar <ArrowUpRight size={17} /></a></Reveal><Reveal className="intro-stamp" delay={0.12}><span>LM</span><small>comércio<br />e serviços</small></Reveal></div></section>;
+/* =========================================================
+   3. DESTAQUE PARA ATENDIMENTO EMERGENCIAL 24 HORAS
+   ========================================================= */
+function EmergencySection() {
+  return (
+    <section className="emergency-highlight-section" id="emergencia" aria-label="Atendimento Emergencial para Condomínios">
+      <div className="container">
+        <Reveal className="emergency-box">
+          <div className="emergency-badge-top">
+            <span className="pulse-indicator" aria-hidden="true" />
+            <PhoneCall size={16} /> CANAL DE RESPOSTA RÁPIDA
+          </div>
+          <div className="emergency-content-grid">
+            <div className="emergency-copy">
+              <h2>SÍNDICO, CONTE COM ATENDIMENTO EMERGENCIAL 24 HORAS!</h2>
+              <p>
+                Imprevistos acontecem. Conte com nosso atendimento para encaminhar as demandas emergenciais do seu condomínio.
+              </p>
+              <div className="emergency-tags">
+                <span>Vazamentos e registros</span>
+                <span>Infestações críticas</span>
+                <span>Demandas elétricas urgentes</span>
+                <span>Suporte técnico operacional</span>
+              </div>
+            </div>
+            <div className="emergency-action-block">
+              <MagneticLink
+                className="button emergency-btn-glow"
+                href={waLink(WA_MSGS.emergency)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <PhoneCall size={19} />
+                <span>ACIONAR ATENDIMENTO</span>
+                <ArrowRight size={17} />
+              </MagneticLink>
+              <small className="emergency-disclaimer">
+                * Canal prioritário para encaminhamento de demandas emergenciais de condomínios. Sujeito à disponibilidade técnica e confirmação operacional da equipe de plantão.
+              </small>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
 }
 
-function Services() {
-  return <section className="solutions section-dark" id="solucoes"><div className="container"><Reveal className="section-heading"><div className="section-label section-label-dark"><span>02</span><span className="label-line" /><span>Serviços principais</span></div><div><p className="kicker light">O essencial, bem feito</p><h2>Soluções para manter <em>tudo em ordem.</em></h2></div><p className="heading-note">Atendimento pensado para quem precisa de agilidade sem abrir mão do cuidado.</p></Reveal><div className="service-list">{services.map((service, index) => <Reveal key={service.title} delay={index * 0.08} className="service-card"><SpotlightSurface><ThreeDImageCard image={service.image} alt={service.title} /><div className="service-body"><p className="kicker light">{service.eyebrow}</p><h3>{service.title}</h3><p>{service.text}</p><MagneticLink className="card-link" href={waLink(service.message)} target="_blank" rel="noreferrer">Solicitar orçamento <ArrowUpRight size={17} /></MagneticLink></div></SpotlightSurface><span className="service-index">0{index + 1}</span></Reveal>)}</div></div></section>;
+/* =========================================================
+   4. PROBLEMAS E NECESSIDADES COMUNS DOS CONDOMÍNIOS
+   ========================================================= */
+function CommonNeedsSection() {
+  const needs = [
+    {
+      num: '01',
+      icon: <Droplet size={22} />,
+      problem: 'Caixas d’água sem higienização e risco à saúde',
+      desc: 'Água imprópria e falta de laudos colocam a saúde dos moradores em risco e geram advertências da vigilância sanitária. A LM realiza desinfecção completa com laudos de conformidade.'
+    },
+    {
+      num: '02',
+      icon: <Bug size={22} />,
+      problem: 'Pragas urbanas e queixas de moradores',
+      desc: 'Baratas nas garagens, formigas nos halls e roedores nas lixeiras desgastam a gestão do síndico. Oferecemos controle contínuo, seguro e com certificado semestral de garantia.'
+    },
+    {
+      num: '03',
+      icon: <Tools size={22} />,
+      problem: 'Pequenos reparos que acumulam no dia a dia',
+      desc: 'Lâmpadas queimadas, registros vazando e pequenos ajustes que demoram semanas para serem resolvidos. Centralizamos essas demandas em uma equipe parceira e organizada.'
+    },
+    {
+      num: '04',
+      icon: <Building size={22} />,
+      problem: 'Demandas em altura sem equipe qualificada',
+      desc: 'Reparos de fachada, calhas e estruturas que exigem trabalho em altura não podem ser feitos por amadores. Atuamos com treinamento NR-35 e equipamentos adequados.'
+    },
+    {
+      num: '05',
+      icon: <FileCertificate size={22} />,
+      problem: 'Insegurança jurídica e prestação de contas',
+      desc: 'Dificuldade em obter relatórios fotográficos e laudos para apresentar em assembleia. A LM entrega documentação clara e suporte técnico para tranquilidade do síndico.'
+    },
+    {
+      num: '06',
+      icon: <Clock size={22} />,
+      problem: 'Falta de pontualidade e múltiplos contatos',
+      desc: 'Lidar com vários prestadores autônomos sem compromisso gera atrasos e dor de cabeça. Com a LM, você tem um único ponto de contato ágil, uniformizado e profissional.'
+    }
+  ];
+
+  return (
+    <section className="condo-needs section" id="necessidades" aria-labelledby="needs-heading">
+      <div className="container">
+        <Reveal className="section-heading split-heading">
+          <div>
+            <div className="section-label"><span>02</span><span className="label-line" /><span>Dores reais da gestão</span></div>
+            <p className="kicker">Rotina simplificada para o síndico</p>
+            <h2 id="needs-heading">Problemas comuns que <em>nós resolvemos para você.</em></h2>
+          </div>
+          <p className="heading-note dark-note">
+            Entendemos a responsabilidade da administração predial. Nossa missão é ser o braço direito do síndico na conservação do condomínio.
+          </p>
+        </Reveal>
+
+        <div className="needs-grid">
+          {needs.map((item, idx) => (
+            <Reveal key={item.num} delay={idx * 0.05} className="need-card">
+              <div className="need-card-header">
+                <span className="need-num">{item.num}</span>
+                <span className="need-icon">{item.icon}</span>
+              </div>
+              <h3>{item.problem}</h3>
+              <p>{item.desc}</p>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }
 
-function Complementary() {
-  return <section className="complementary section" id="complementares"><div className="container"><Reveal className="section-heading split-heading"><div><div className="section-label"><span>03</span><span className="label-line" /><span>Serviços complementares</span></div><p className="kicker">Para as demandas do cotidiano</p><h2>Quando aparecer uma necessidade, <em>conte com a LM.</em></h2></div><p className="heading-note dark-note">Do cuidado preventivo aos pequenos reparos, a LM ajuda condomínios e estabelecimentos a manterem seus espaços funcionando bem.</p></Reveal><div className="complementary-grid">{complementary.map(([title, text, image], index) => <Reveal key={title} className="complementary-card" delay={index * 0.06}><div className="complementary-image"><ParallaxImage src={image} alt={title} /></div><div className="complementary-content"><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p></div></Reveal>)}</div></div></section>;
+/* =========================================================
+   5. CATÁLOGO DE SERVIÇOS EM CARDS COM IMAGENS
+   ========================================================= */
+function ServicesCatalog() {
+  return (
+    <section className="solutions section-dark" id="solucoes" aria-labelledby="services-heading">
+      <div className="container">
+        <Reveal className="section-heading">
+          <div className="section-label section-label-dark">
+            <span>03</span><span className="label-line" /><span>Serviços especializados</span>
+          </div>
+          <div>
+            <p className="kicker light">O essencial para o condomínio</p>
+            <h2 id="services-heading">Catálogo de serviços <em>para manter tudo em ordem.</em></h2>
+          </div>
+          <p className="heading-note">
+            Soluções completas com produtos homologados, equipe treinada e laudos técnicos para prestação de contas.
+          </p>
+        </Reveal>
+
+        <div className="service-list">
+          {mainServices.map((service, index) => (
+            <Reveal key={service.title} delay={index * 0.08} className="service-card">
+              <SpotlightSurface>
+                <ThreeDImageCard image={service.image} alt={service.title} />
+                <div className="service-body">
+                  <div className="service-tag-pill">{service.tag}</div>
+                  <p className="kicker light">{service.eyebrow}</p>
+                  <h3>{service.title}</h3>
+                  <p>{service.text}</p>
+                  <MagneticLink className="card-link" href={waLink(service.message)} target="_blank" rel="noreferrer">
+                    <span>Solicitar orçamento para condomínio</span> <ArrowUpRight size={17} />
+                  </MagneticLink>
+                </div>
+              </SpotlightSurface>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }
 
-function Audience() {
-  return <section className="audience section-accent" id="quem-atendemos"><div className="container audience-grid"><Reveal className="audience-heading"><div className="section-label"><span>04</span><span className="label-line" /><span>Quem atendemos</span></div><p className="kicker">Uma solução para diferentes rotinas</p><h2>Para quem precisa de uma empresa <em>que acompanha.</em></h2></Reveal><Reveal className="audience-list" delay={0.12}><div><span>01</span><strong>Condomínios residenciais</strong><p>Cuidado próximo para a rotina de moradores e áreas comuns.</p></div><div><span>02</span><strong>Condomínios comerciais</strong><p>Serviços que ajudam a manter a operação funcionando.</p></div><div><span>03</span><strong>Escolas, empresas e comércios</strong><p>Mais organização para diferentes espaços e necessidades.</p></div></Reveal></div></section>;
+/* =========================================================
+   6. SEÇÃO DE PEQUENOS REPAROS E MANUTENÇÃO PREDIAL
+   ========================================================= */
+function MaintenanceSection() {
+  return (
+    <section className="complementary section" id="manutencao" aria-labelledby="maint-heading">
+      <div className="container">
+        <Reveal className="section-heading split-heading">
+          <div>
+            <div className="section-label"><span>04</span><span className="label-line" /><span>Conservação e Reparos</span></div>
+            <p className="kicker">Para as demandas pontuais do prédio</p>
+            <h2 id="maint-heading">Pequenos reparos e manutenção: <em>a LM resolve.</em></h2>
+          </div>
+          <p className="heading-note dark-note">
+            Do cuidado preventivo às intervenções emergenciais, auxiliamos síndicos e administradoras a manterem as instalações prediais sempre funcionando.
+          </p>
+        </Reveal>
+
+        <div className="complementary-grid">
+          {maintenanceServices.map((item, index) => (
+            <Reveal key={item.title} className="complementary-card" delay={index * 0.06}>
+              <div className="complementary-image">
+                <ParallaxImage src={item.image} alt={item.title} />
+              </div>
+              <div className="complementary-content">
+                <span>0{index + 1}</span>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal className="maintenance-cta-strip" delay={0.2}>
+          <div className="cta-strip-text">
+            <strong>Precisa de apoio para demandas pontuais ou contrato recorrente?</strong>
+            <span>Montamos um cronograma sob medida para as necessidades do seu condomínio.</span>
+          </div>
+          <MagneticLink
+            className="button button-primary"
+            href={waLink(WA_MSGS.manutencao)}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Falar com especialista <ArrowUpRight size={17} />
+          </MagneticLink>
+        </Reveal>
+      </div>
+    </section>
+  );
 }
 
-function Gallery() {
-  return <section className="work section" id="trabalhos"><div className="container"><Reveal className="section-heading split-heading"><div><div className="section-label"><span>05</span><span className="label-line" /><span>Trabalhos realizados</span></div><p className="kicker">Um pouco do nosso trabalho</p><h2>Presença, cuidado e <em>resultado.</em></h2></div><p className="heading-note dark-note">Uma seleção de registros enviados pela LM para mostrar a variedade de serviços que fazem parte da nossa rotina.</p></Reveal><div className="gallery-grid">{gallery.map(([image, alt, poster], index) => <GalleryItem key={`${image}-${index}`} image={image} alt={alt} poster={poster} index={index} />)}</div></div></section>;
+/* =========================================================
+   7. SEÇÃO DE QUALIFICAÇÃO TÉCNICA (NRS E ART)
+   ========================================================= */
+function TechnicalQualificationsSection() {
+  const quals = [
+    {
+      badge: 'NR-35',
+      title: 'Trabalho em Altura',
+      desc: 'Profissionais capacitados e equipados com cintos tipo paraquedista, talabartes duplos, trava-quedas e linhas de vida para serviços em fachadas e coberturas elevadas.'
+    },
+    {
+      badge: 'NR-12',
+      title: 'Máquinas e Equipamentos',
+      desc: 'Procedimentos seguros na operação de maquinários, lavadoras industriais de alta pressão e ferramentas elétricas para manutenção e conservação predial.'
+    },
+    {
+      badge: 'NR-33',
+      title: 'Espaços Confinados',
+      desc: 'Protocolos de segurança e ventilação para entrada e higienização em reservatórios subterrâneos, caixas d’água elevadas e galerias de condomínios.'
+    },
+    {
+      badge: 'ART',
+      title: 'ART Civil e Elétrica',
+      desc: 'Disponibilidade de emissão de Anotação de Responsabilidade Técnica (ART) por profissionais legalmente habilitados, conforme aplicabilidade e escopo da demanda.'
+    }
+  ];
+
+  return (
+    <section className="tech-qualifications section-dark" id="qualificacao" aria-labelledby="qual-heading">
+      <div className="container">
+        <Reveal className="section-heading split-heading">
+          <div>
+            <div className="section-label section-label-dark">
+              <span>05</span><span className="label-line" /><span>Segurança e Conformidade</span>
+            </div>
+            <p className="kicker light">Rigor operacional e responsabilidade</p>
+            <h2 id="qual-heading">Qualificação técnica: <em>sua tranquilidade garantida.</em></h2>
+          </div>
+          <p className="heading-note">
+            Trabalho sério, sem amadorismo. Cumprimento das normas regulamentadoras vigentes para resguardar o síndico e o condomínio.
+          </p>
+        </Reveal>
+
+        <div className="quals-grid">
+          {quals.map((q, idx) => (
+            <Reveal key={q.badge} delay={idx * 0.07} className="qual-card">
+              <div className="qual-badge-header">
+                <span className="qual-badge-code">{q.badge}</span>
+                <ShieldCheck size={20} className="qual-check-icon" />
+              </div>
+              <h3>{q.title}</h3>
+              <p>{q.desc}</p>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal className="qual-disclaimer-box" delay={0.25}>
+          <AlertTriangle size={18} className="qual-warn-icon" />
+          <p>
+            <strong>Transparência e conformidade:</strong> As Normas Regulamentadoras (NRs) refletem as qualificações e treinamentos individuais dos profissionais de campo. A responsabilidade técnica (ART) é disponibilizada e emitida por engenheiros ou técnicos legalmente habilitados, conforme o escopo e a aplicabilidade específica de cada projeto.
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* =========================================================
+   8. SEÇÃO DE SERVIÇOS EM ALTURA
+   ========================================================= */
+function HeightServicesSection() {
+  return (
+    <section className="height-services section" id="altura" aria-labelledby="height-heading">
+      <div className="container">
+        <div className="height-grid">
+          <Reveal className="height-copy">
+            <div className="section-label"><span>06</span><span className="label-line" /><span>Especialização e Equipamento</span></div>
+            <p className="kicker">Acesso seguro em altura</p>
+            <h2 id="height-heading">PRECISA DE SERVIÇOS EM ALTURA NO SEU CONDOMÍNIO?</h2>
+            <p className="lead">
+              Conte com soluções especializadas para demandas que exigem acesso em altura, planejamento e execução com segurança.
+            </p>
+            <p>
+              Realizamos intervenções técnicas em fachadas, instalação de totens e estruturas, manutenção de pontos elevados, calhas e coberturas com caminhão cesto e equipamentos certificados pela NR-35.
+            </p>
+            <ul className="height-features-list">
+              <li><IconCheck size={16} /> Limpeza técnica de fachadas e vidros em altura</li>
+              <li><IconCheck size={16} /> Instalação e manutenção de totens, luminosos e câmeras</li>
+              <li><IconCheck size={16} /> Reparo pontual em telhados, calhas e estruturas elevadas</li>
+              <li><IconCheck size={16} /> Uso obrigatório de EPIs e cumprimento estrito da NR-35</li>
+            </ul>
+            <div className="height-actions">
+              <MagneticLink
+                className="button button-primary"
+                href={waLink(WA_MSGS.altura)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                SOLICITAR ORÇAMENTO <ArrowUpRight size={18} />
+              </MagneticLink>
+            </div>
+          </Reveal>
+
+          <Reveal className="height-visual-collage" delay={0.15}>
+            <div className="height-visual-main">
+              <img
+                src="/assets/trabalho-fachada-altura.jpg"
+                alt="Equipe da LM realizando manutenção com caminhão cesto em altura"
+                loading="lazy"
+                decoding="async"
+              />
+              <span className="visual-caption">Manutenção com caminhão cesto</span>
+            </div>
+            <div className="height-visual-secondary">
+              <img
+                src="/assets/trabalho-totem-sadef.jpg"
+                alt="Instalação de totem e infraestrutura de segurança"
+                loading="lazy"
+                decoding="async"
+              />
+              <span className="visual-caption">Instalação de totem</span>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* =========================================================
+   9. DIFERENCIAIS DA LM PARA SÍNDICOS
+   ========================================================= */
+function DifferentialsSection() {
+  const diffs = [
+    {
+      title: 'Parceira Estratégica Única',
+      desc: 'Em vez de contratar múltiplos prestadores autônomos, você conta com uma parceira completa para dedetização, caixas d’água, sanitização, altura e manutenção.'
+    },
+    {
+      title: 'Segurança Técnica para o Síndico',
+      desc: 'Emissão de laudos de potabilidade, certificados de desinsetização e relatórios fotográficos de antes/depois prontos para prestação de contas na assembleia.'
+    },
+    {
+      title: 'Pontualidade e Organização',
+      desc: 'Equipe própria devidamente uniformizada, identificada e com todos os EPIs exigidos, com agendamentos planejados para não interferir na rotina dos moradores.'
+    },
+    {
+      title: 'Atendimento Ágil e Emergencial',
+      desc: 'Suporte rápido para canalizar demandas urgentes e evitar que pequenos imprevistos se tornem grandes prejuízos para o condomínio.'
+    }
+  ];
+
+  return (
+    <section className="differentials section-accent" id="diferenciais" aria-labelledby="diff-heading">
+      <div className="container">
+        <Reveal className="section-heading split-heading">
+          <div>
+            <div className="section-label"><span>07</span><span className="label-line" /><span>Por que a LM</span></div>
+            <p className="kicker">Compromisso com o seu condomínio</p>
+            <h2 id="diff-heading">Diferenciais que fazem <em>a diferença na gestão.</em></h2>
+          </div>
+          <p className="heading-note">
+            Entendemos que a tranquilidade do síndico depende de prestadores pontuais, qualificados e transparentes.
+          </p>
+        </Reveal>
+
+        <div className="diffs-grid">
+          {diffs.map((d, index) => (
+            <Reveal key={d.title} delay={index * 0.07} className="diff-card">
+              <span className="diff-card-num">0{index + 1}</span>
+              <h3>{d.title}</h3>
+              <p>{d.desc}</p>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* =========================================================
+   10. GALERIA DE TRABALHOS REALIZADOS
+   ========================================================= */
+function GallerySection() {
+  return (
+    <section className="work section" id="trabalhos" aria-labelledby="work-heading">
+      <div className="container">
+        <Reveal className="section-heading split-heading">
+          <div>
+            <div className="section-label"><span>08</span><span className="label-line" /><span>Registros em campo</span></div>
+            <p className="kicker">Transparência em cada detalhe</p>
+            <h2 id="work-heading">Trabalhos realizados: <em>presença e resultado.</em></h2>
+          </div>
+          <p className="heading-note dark-note">
+            Confira registros reais de serviços executados pela equipe da LM em condomínios e estabelecimentos.
+          </p>
+        </Reveal>
+
+        <div className="gallery-grid">
+          {gallery.map(([image, alt, poster], index) => (
+            <GalleryItem key={`${image}-${index}`} image={image} alt={alt} poster={poster} index={index} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }
 
 function GalleryItem({ image, alt, poster, index }) {
   const [open, setOpen] = useState(false);
   const isVideo = image.endsWith('.mp4');
   const use3D = !isVideo && [0, 4, 8].includes(index);
+
   const media = isVideo ? (
     <div className="gallery-video-wrapper">
       <video
@@ -220,9 +794,50 @@ function GalleryItem({ image, alt, poster, index }) {
   ) : (
     <img src={image} alt={alt} loading="lazy" decoding="async" />
   );
-  return <Reveal className={`gallery-item gallery-item-${index + 1} ${isVideo ? 'is-video' : ''}`} delay={index * 0.04}><button type="button" aria-label={isVideo ? `Assistir vídeo: ${alt}` : `Ampliar foto: ${alt}`} onClick={() => setOpen(true)}>{media}<span>{alt} <ArrowUpRight size={16} /></span></button>{open && <div className="gallery-lightbox" role="dialog" aria-modal="true" aria-label={isVideo ? `Vídeo: ${alt}` : `Imagem ampliada: ${alt}`} onClick={() => setOpen(false)}><button type="button" className="lightbox-close" aria-label="Fechar" onClick={() => setOpen(false)}><X size={30} /></button>{isVideo ? <video src={image} poster={poster} controls autoPlay playsInline className="gallery-lightbox-video" onClick={(e) => e.stopPropagation()} /> : <img src={image} alt={alt} />}</div>}</Reveal>;
+
+  return (
+    <Reveal className={`gallery-item gallery-item-${index + 1} ${isVideo ? 'is-video' : ''}`} delay={index * 0.04}>
+      <button
+        type="button"
+        aria-label={isVideo ? `Assistir vídeo: ${alt}` : `Ampliar foto: ${alt}`}
+        onClick={() => setOpen(true)}
+      >
+        {media}
+        <span>{alt} <ArrowUpRight size={16} /></span>
+      </button>
+      {open && (
+        <div
+          className="gallery-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label={isVideo ? `Vídeo: ${alt}` : `Imagem ampliada: ${alt}`}
+          onClick={() => setOpen(false)}
+        >
+          <button type="button" className="lightbox-close" aria-label="Fechar" onClick={() => setOpen(false)}>
+            <X size={30} />
+          </button>
+          {isVideo ? (
+            <video
+              src={image}
+              poster={poster}
+              controls
+              autoPlay
+              playsInline
+              className="gallery-lightbox-video"
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : (
+            <img src={image} alt={alt} />
+          )}
+        </div>
+      )}
+    </Reveal>
+  );
 }
 
+/* =========================================================
+   11. AVALIAÇÕES DE SÍNDICOS E GESTORES (REVIEWS)
+   ========================================================= */
 const initialReviews = [
   {
     id: 'rev-1',
@@ -310,314 +925,236 @@ function Reviews() {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) {}
     return initialReviews;
   });
 
   const [activeFilter, setActiveFilter] = useState('Todos');
-  const [showForm, setShowForm] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
   const [formData, setFormData] = useState({
     name: '',
     role: '',
     entity: '',
-    service: 'Dedetização & Desratização',
+    service: 'Limpeza de Caixas d’água',
     rating: 5,
     comment: ''
   });
-  const [hoverRating, setHoverRating] = useState(0);
-  const [success, setSuccess] = useState(false);
 
-  const categories = ['Todos', 'Dedetização & Desratização', 'Limpeza de Caixas d’água', 'Sanitização', 'Manutenção'];
+  const filterOptions = ['Todos', 'Limpeza de Caixas d’água', 'Dedetização & Desratização', 'Sanitização', 'Manutenção'];
 
-  const ratingLabels = {
-    1: 'Precisa melhorar',
-    2: 'Regular',
-    3: 'Bom serviço',
-    4: 'Muito bom!',
-    5: 'Excelente! ⭐⭐⭐⭐⭐'
-  };
+  const filteredReviews = activeFilter === 'Todos'
+    ? reviews
+    : reviews.filter((r) => r.service.toLowerCase().includes(activeFilter.toLowerCase()) || activeFilter.toLowerCase().includes(r.service.toLowerCase()));
 
-  const handleRatingClick = (val) => {
-    setFormData(prev => ({ ...prev, rating: val }));
-  };
+  const avgRating = (reviews.reduce((acc, cur) => acc + cur.rating, 0) / reviews.length).toFixed(1);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.comment.trim()) return;
 
-    const newReview = {
+    const newRev = {
       id: `rev-${Date.now()}`,
       name: formData.name.trim(),
-      role: formData.role.trim() || 'Cliente Verificado',
-      entity: formData.entity.trim() || 'Condomínio / Empresa',
+      role: formData.role.trim() || 'Gestor / Morador',
+      entity: formData.entity.trim() || 'Condomínio ou Empresa',
       service: formData.service,
-      rating: Number(formData.rating) || 5,
+      rating: Number(formData.rating),
       comment: formData.comment.trim(),
       date: new Date().toLocaleDateString('pt-BR'),
       verified: true
     };
 
-    const updated = [newReview, ...reviews];
+    const updated = [newRev, ...reviews];
     setReviews(updated);
     try {
       localStorage.setItem('lm_customer_reviews', JSON.stringify(updated));
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (e) {}
 
-    setSuccess(true);
-    setFormData({
-      name: '',
-      role: '',
-      entity: '',
-      service: 'Dedetização & Desratização',
-      rating: 5,
-      comment: ''
-    });
-
+    setSubmitted(true);
     setTimeout(() => {
-      setSuccess(false);
-      setShowForm(false);
+      setSubmitted(false);
+      setFormOpen(false);
+      setFormData({
+        name: '',
+        role: '',
+        entity: '',
+        service: 'Limpeza de Caixas d’água',
+        rating: 5,
+        comment: ''
+      });
     }, 2400);
   };
 
-  const filteredReviews = activeFilter === 'Todos'
-    ? reviews
-    : reviews.filter(r => r.service.toLowerCase().includes(activeFilter.toLowerCase()) || activeFilter.toLowerCase().includes(r.service.toLowerCase()));
-
-  const avgRating = reviews.length
-    ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
-    : '5.0';
-
-  const getInitials = (name) => {
-    return name ? name.split(' ').map(n => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase() : 'LM';
-  };
-
   return (
-    <section className="reviews-section" id="avaliacoes">
+    <section className="reviews-section" id="avaliacoes" aria-labelledby="reviews-heading">
       <div className="container">
-        <Reveal className="section-heading split-heading">
+        <Reveal className="reviews-header-wrap">
           <div>
             <div className="section-label section-label-dark">
-              <span>06</span>
-              <span className="label-line" />
-              <span>Avaliações &amp; Opiniões</span>
+              <span>09</span><span className="label-line" /><span>Depoimentos Reais</span>
             </div>
-            <p className="kicker light">A confiança de quem contrata</p>
-            <h2>Transparência e resultados <em>comprovados pelos clientes.</em></h2>
+            <p className="kicker light">Reconhecimento de quem confia</p>
+            <h2 id="reviews-heading">Avaliações de <em>síndicos e administradoras.</em></h2>
           </div>
-          <p className="heading-note">
-            Confira depoimentos e avaliações reais de síndicos, gestores prediais e empresas que contam com a LM Comércio e Serviços.
-          </p>
+          <button
+            type="button"
+            className="reviews-btn-trigger"
+            onClick={() => setFormOpen(!formOpen)}
+            aria-expanded={formOpen}
+          >
+            <IconPlus size={16} /> {formOpen ? 'Fechar formulário' : 'Deixar sua avaliação'}
+          </button>
         </Reveal>
 
-        <Reveal className="reviews-stats-bar" delay={0.06}>
+        <Reveal className="reviews-stats-bar" delay={0.08}>
           <div className="reviews-score-block">
             <span className="reviews-big-score">{avgRating}</span>
             <div>
               <StarRating rating={Math.round(Number(avgRating))} size={18} />
-              <span className="reviews-stat-label">Média geral baseada em {reviews.length} avaliações</span>
+              <span className="reviews-stat-label">Nota média geral</span>
             </div>
           </div>
-
           <div className="reviews-stat-divider" aria-hidden="true" />
-
+          <div className="reviews-stat-item">
+            <span className="reviews-stat-num">{reviews.length}</span>
+            <span className="reviews-stat-label">Avaliações registradas</span>
+          </div>
+          <div className="reviews-stat-divider" aria-hidden="true" />
           <div className="reviews-stat-item">
             <span className="reviews-stat-num">100%</span>
-            <span className="reviews-stat-label">Laudo Técnico &amp; Pontualidade</span>
+            <span className="reviews-stat-label">Laudos emitidos com aprovação</span>
           </div>
-
-          <div className="reviews-stat-divider" aria-hidden="true" />
-
-          <div className="reviews-stat-item">
-            <span className="reviews-stat-num">+50</span>
-            <span className="reviews-stat-label">Condomínios &amp; Escolas Atendidos</span>
-          </div>
-
-          <button
-            type="button"
-            className="reviews-btn-trigger"
-            onClick={() => setShowForm(!showForm)}
-            aria-expanded={showForm}
-          >
-            <IconPlus size={16} />
-            {showForm ? 'Fechar formulário' : 'Avaliar Nossos Serviços'}
-          </button>
         </Reveal>
 
-        {showForm && (
-          <motion.div
-            className="review-form-card"
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.28 }}
-          >
+        {formOpen && (
+          <Reveal className="review-form-card" delay={0.05}>
             <h3 className="review-form-title">Compartilhe sua experiência com a LM</h3>
-            <p className="review-form-desc">
-              Sua avaliação ajuda outros síndicos e gestores a conhecerem a qualidade dos nossos serviços.
-            </p>
-
-            <form onSubmit={handleSubmit}>
-              <div className="review-stars-picker">
-                <span className="review-label" style={{ marginBottom: 0, marginRight: 8 }}>Sua nota:</span>
-                {[1, 2, 3, 4, 5].map((val) => {
-                  const active = (hoverRating || formData.rating) >= val;
-                  return (
-                    <button
-                      key={val}
-                      type="button"
-                      className={`star-btn ${active ? 'is-active' : ''}`}
-                      onMouseEnter={() => setHoverRating(val)}
-                      onMouseLeave={() => setHoverRating(0)}
-                      onClick={() => handleRatingClick(val)}
-                      aria-label={`${val} estrelas`}
+            <p className="review-form-desc">Seu relato ajuda outros síndicos e gestores a conhecerem nosso padrão de atendimento.</p>
+            {submitted ? (
+              <div className="review-success-msg" role="status">
+                <IconCheck size={20} /> Avaliação enviada com sucesso! Muito obrigado pela parceria.
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit}>
+                <div className="review-form-grid">
+                  <div>
+                    <label className="review-label" htmlFor="rev-name">Seu Nome *</label>
+                    <input
+                      id="rev-name"
+                      className="review-input"
+                      required
+                      placeholder="Ex: Carlos Andrade"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label className="review-label" htmlFor="rev-role">Cargo / Função</label>
+                    <input
+                      id="rev-role"
+                      className="review-input"
+                      placeholder="Ex: Síndico, Gerente de Facilities..."
+                      value={formData.role}
+                      onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label className="review-label" htmlFor="rev-entity">Condomínio ou Empresa</label>
+                    <input
+                      id="rev-entity"
+                      className="review-input"
+                      placeholder="Ex: Condomínio Edifício Solar..."
+                      value={formData.entity}
+                      onChange={(e) => setFormData({ ...formData, entity: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label className="review-label" htmlFor="rev-service">Serviço Realizado</label>
+                    <select
+                      id="rev-service"
+                      className="review-select"
+                      value={formData.service}
+                      onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                     >
-                      {active ? <IconStarFilled size={26} /> : <IconStar size={26} />}
-                    </button>
-                  );
-                })}
-                <span className="star-rating-hint">
-                  {ratingLabels[hoverRating || formData.rating]}
-                </span>
-              </div>
-
-              <div className="review-form-grid">
-                <div>
-                  <label className="review-label" htmlFor="rev-name">Seu Nome *</label>
-                  <input
-                    id="rev-name"
-                    className="review-input"
-                    type="text"
-                    required
-                    placeholder="Ex: Carlos Oliveira"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  />
+                      <option value="Limpeza de Caixas d’água">Limpeza de Caixas d’água</option>
+                      <option value="Dedetização & Desratização">Dedetização & Desratização</option>
+                      <option value="Sanitização">Sanitização</option>
+                      <option value="Serviços em Altura">Serviços em Altura</option>
+                      <option value="Manutenção">Manutenção Predial / Reparos</option>
+                    </select>
+                  </div>
+                  <div className="review-field-full">
+                    <label className="review-label">Avaliação em Estrelas</label>
+                    <div className="review-stars-picker">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          className={`star-btn ${formData.rating >= star ? 'is-active' : ''}`}
+                          onClick={() => setFormData({ ...formData, rating: star })}
+                          aria-label={`Selecionar ${star} estrelas`}
+                        >
+                          {formData.rating >= star ? <IconStarFilled size={22} /> : <IconStar size={22} />}
+                        </button>
+                      ))}
+                      <span className="star-rating-hint">{formData.rating} de 5 estrelas</span>
+                    </div>
+                  </div>
+                  <div className="review-field-full">
+                    <label className="review-label" htmlFor="rev-comment">Seu Depoimento *</label>
+                    <textarea
+                      id="rev-comment"
+                      className="review-textarea"
+                      required
+                      placeholder="Conte como foi o atendimento da LM, cumprimento de prazos, laudos..."
+                      value={formData.comment}
+                      onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
+                    />
+                  </div>
                 </div>
-
-                <div>
-                  <label className="review-label" htmlFor="rev-role">Seu Cargo / Função</label>
-                  <input
-                    id="rev-role"
-                    className="review-input"
-                    type="text"
-                    placeholder="Ex: Síndico Profissional / Morador / Gerente"
-                    value={formData.role}
-                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                  />
+                <div className="review-form-actions">
+                  <button type="submit" className="review-submit-btn">Publicar Avaliação</button>
+                  <button type="button" className="review-cancel-btn" onClick={() => setFormOpen(false)}>Cancelar</button>
                 </div>
-
-                <div>
-                  <label className="review-label" htmlFor="rev-entity">Condomínio / Empresa / Local</label>
-                  <input
-                    id="rev-entity"
-                    className="review-input"
-                    type="text"
-                    placeholder="Ex: Condomínio Edifício Mirante do Sol"
-                    value={formData.entity}
-                    onChange={(e) => setFormData({ ...formData, entity: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <label className="review-label" htmlFor="rev-service">Serviço Realizado *</label>
-                  <select
-                    id="rev-service"
-                    className="review-select"
-                    value={formData.service}
-                    onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                  >
-                    <option value="Dedetização & Desratização">Dedetização &amp; Desratização</option>
-                    <option value="Limpeza de Caixas d’água">Limpeza de Caixas d’água</option>
-                    <option value="Sanitização">Sanitização de Ambientes</option>
-                    <option value="Manutenção">Manutenção Predial / Elétrica / Hidráulica</option>
-                    <option value="Múltiplos Serviços">Múltiplos Serviços Integrados</option>
-                  </select>
-                </div>
-
-                <div className="review-field-full">
-                  <label className="review-label" htmlFor="rev-comment">Seu Depoimento / Comentário *</label>
-                  <textarea
-                    id="rev-comment"
-                    className="review-textarea"
-                    required
-                    rows={4}
-                    placeholder="Conte como foi o atendimento, pontualidade da equipe, emissão de laudo e resultado do serviço..."
-                    value={formData.comment}
-                    onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              <div className="review-form-actions">
-                <button type="submit" className="review-submit-btn">
-                  <IconCheck size={16} /> Publicar Avaliação
-                </button>
-                <button
-                  type="button"
-                  className="review-cancel-btn"
-                  onClick={() => setShowForm(false)}
-                >
-                  Cancelar
-                </button>
-              </div>
-
-              {success && (
-                <div className="review-success-msg">
-                  <IconCheck size={18} />
-                  <span>Sua avaliação foi registrada com sucesso! Muito obrigado pelo feedback.</span>
-                </div>
-              )}
-            </form>
-          </motion.div>
+              </form>
+            )}
+          </Reveal>
         )}
 
-        <Reveal className="reviews-filter-bar" delay={0.08}>
-          {categories.map((cat) => (
+        <div className="reviews-filter-bar" role="tablist" aria-label="Filtrar avaliações por serviço">
+          {filterOptions.map((f) => (
             <button
-              key={cat}
+              key={f}
               type="button"
-              className={`reviews-filter-pill ${activeFilter === cat ? 'is-active' : ''}`}
-              onClick={() => setActiveFilter(cat)}
+              className={`reviews-filter-pill ${activeFilter === f ? 'is-active' : ''}`}
+              onClick={() => setActiveFilter(f)}
             >
-              {cat}
+              {f}
             </button>
           ))}
-        </Reveal>
+        </div>
 
         <div className="reviews-grid">
-          {filteredReviews.map((item, idx) => (
-            <Reveal key={item.id || idx} delay={idx * 0.05} className="review-card">
-              <div>
-                <div className="review-card-top">
-                  <span className="review-card-tag">{item.service}</span>
-                  <StarRating rating={item.rating} size={15} />
-                </div>
-                <p className="review-card-quote">
-                  "{item.comment}"
-                </p>
+          {filteredReviews.map((rev) => (
+            <div key={rev.id} className="review-card">
+              <div className="review-card-top">
+                <span className="review-card-tag">{rev.service}</span>
+                <StarRating rating={rev.rating} size={14} />
               </div>
-
+              <p className="review-card-quote">“{rev.comment}”</p>
               <div className="review-card-author">
-                <div className="review-author-avatar">
-                  {getInitials(item.name)}
+                <div className="review-author-avatar" aria-hidden="true">
+                  {rev.name.charAt(0).toUpperCase()}
                 </div>
                 <div className="review-author-info">
-                  <div className="review-author-name">{item.name}</div>
-                  <div className="review-author-meta">
-                    {item.role}{item.entity ? ` • ${item.entity}` : ''}
-                  </div>
-                  {item.verified && (
-                    <span className="review-verified-badge">
-                      <IconCheck size={12} /> Cliente Verificado • {item.date}
-                    </span>
-                  )}
+                  <div className="review-author-name">{rev.name}</div>
+                  <div className="review-author-meta">{rev.role} • {rev.entity}</div>
+                  <div className="review-verified-badge"><IconCheck size={11} /> Serviço Verificado ({rev.date})</div>
                 </div>
               </div>
-            </Reveal>
+            </div>
           ))}
         </div>
       </div>
@@ -625,16 +1162,402 @@ function Reviews() {
   );
 }
 
-function Contact() {
-  return <section className="contact section-dark" id="contato"><div className="container contact-grid"><Reveal className="contact-mark"><img src="/assets/logotipo.png" alt="LM Comércio e Serviços" /><p>Uma empresa parceira para cuidar do seu espaço.</p></Reveal><Reveal className="contact-copy" delay={0.12}><p className="kicker light">Vamos conversar?</p><h2>Precisa de uma empresa para cuidar da sua <em>casa, condomínio ou negócio?</em></h2><p>Seja para sua residência, condomínio ou empresa, conte com a LM Comércio e Serviços para diferentes necessidades de manutenção, dedetização, limpeza e conservação.</p><MagneticLink className="button button-primary" href={waLink('Olá! Gostaria de conhecer os serviços da LM Comércio e Serviços.')} target="_blank" rel="noreferrer">Fale com a LM pelo WhatsApp <MessageCircle size={18} /></MagneticLink></Reveal></div></section>;
+/* =========================================================
+   12. CHAMADA PARA ORÇAMENTO (CTA FINAL)
+   ========================================================= */
+function QuoteCtaSection() {
+  return (
+    <section className="quote-cta-section" id="contato" aria-labelledby="cta-heading">
+      <div className="container">
+        <Reveal className="quote-cta-box">
+          <div className="quote-cta-content">
+            <span className="kicker light">Parceria que facilita a sua rotina</span>
+            <h2 id="cta-heading">Pronto para levar mais tranquilidade para a gestão do seu condomínio?</h2>
+            <p>
+              Fale diretamente com a equipe técnica da LM Comércio e Serviços. Atendimento ágil, orçamentos detalhados e suporte especializado para síndicos e administradoras.
+            </p>
+            <div className="quote-cta-buttons">
+              <MagneticLink
+                className="button button-primary"
+                href={waLink(WA_MSGS.generalQuote)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Solicitar orçamento pelo WhatsApp <ArrowUpRight size={18} />
+              </MagneticLink>
+              <MagneticLink
+                className="button button-emergency"
+                href={waLink(WA_MSGS.emergency)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <PhoneCall size={17} /> Acionar atendimento emergencial
+              </MagneticLink>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
 }
 
-function Footer() {
-  return <footer className="site-footer"><div className="container footer-grid"><div className="footer-brand"><img src="/assets/logotipo.png" alt="LM Comércio e Serviços" /><p>Serviços para conservar, cuidar e manter.</p></div><div><p className="footer-label">Navegação</p><a href="#solucoes">Soluções</a><a href="#complementares">Manutenção</a><a href="#trabalhos">Trabalhos</a><a href="#avaliacoes">Avaliações</a></div><div><p className="footer-label">Contato</p><a href={waLink('Olá! Gostaria de falar com a LM Comércio e Serviços.')} target="_blank" rel="noreferrer">WhatsApp <ArrowUpRight size={14} /></a><div className="footer-socials" aria-label="Redes sociais"><span className="footer-social-label">Em breve</span><button className="social-button" type="button" disabled aria-label="Instagram da LM Comércio e Serviços — link em breve"><Instagram size={17} /><span>Instagram</span></button><button className="social-button" type="button" disabled aria-label="TikTok da LM Comércio e Serviços — link em breve"><Tiktok size={17} /><span>TikTok</span></button></div></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} LM Comércio e Serviços</span><span>Conservação, manutenção e cuidado.</span></div></footer>;
+/* =========================================================
+   13. RODAPÉ COMPLETO
+   ========================================================= */
+function Footer({ onNavigateBio }) {
+  return (
+    <footer className="site-footer" role="contentinfo">
+      <div className="container">
+        <div className="footer-grid">
+          <div className="footer-brand">
+            <img src="/assets/logotipo.png" alt="LM Comércio e Serviços" width="250" height="82" loading="lazy" decoding="async" />
+            <p>
+              Parceira estratégica de síndicos, condomínios e administradoras. Soluções completas em dedetização, limpeza de caixas d'água, sanitização, serviços em altura e manutenção predial.
+            </p>
+            <div className="footer-domain-badge">
+              <span>Domínio Oficial:</span> <strong>https://manutencaolm.com.br/</strong>
+            </div>
+          </div>
+
+          <div>
+            <span className="footer-label">Navegação Rápida</span>
+            <a href="#solucoes">Soluções Especializadas</a>
+            <a href="#manutencao">Pequenos Reparos &amp; Manutenção</a>
+            <a href="#altura">Serviços em Altura</a>
+            <a href="#qualificacao">Qualificação Técnica (NRs &amp; ART)</a>
+            <a href="#diferenciais">Diferenciais da Empresa</a>
+            <a href="#trabalhos">Trabalhos Realizados</a>
+            <a href="#avaliacoes">Avaliações de Síndicos</a>
+          </div>
+
+          <div>
+            <span className="footer-label">Canais de Contato</span>
+            <a href={waLink(WA_MSGS.generalQuote)} target="_blank" rel="noreferrer">
+              <MessageCircle size={14} /> WhatsApp: (11) 94723-1234
+            </a>
+            <a href={waLink(WA_MSGS.emergency)} target="_blank" rel="noreferrer" className="footer-emergency-link">
+              <PhoneCall size={14} /> Atendimento Emergencial 24h
+            </a>
+            <button type="button" className="footer-bio-btn" onClick={onNavigateBio}>
+              <ExternalLink size={14} /> Página de Links Rápidos (Link na Bio)
+            </button>
+            <div className="footer-socials">
+              <span className="footer-social-label">Canais Institucionais</span>
+              <button type="button" className="social-button" disabled title="Rede oficial em estruturação">
+                <Instagram size={14} /> Instagram oficial
+              </button>
+              <button type="button" className="social-button" disabled title="Rede oficial em estruturação">
+                <Tiktok size={14} /> TikTok oficial
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="footer-bottom">
+          <span>&copy; {new Date().getFullYear()} LM Comércio e Serviços. Todos os direitos reservados.</span>
+          <span>Atendimento focado em condomínios, escolas e empresas • São Paulo e Região</span>
+        </div>
+      </div>
+    </footer>
+  );
 }
 
-function App() {
-  return <MotionConfig reducedMotion="user"><SpotlightCursor /><ScrollProgress /><Header /><main><Hero /><Intro /><Services /><Complementary /><Audience /><Gallery /><Reviews /><Contact /></main><Footer /><MagneticLink className="floating-whatsapp" href={waLink('Olá! Gostaria de falar com a LM Comércio e Serviços.')} target="_blank" rel="noreferrer" aria-label="Falar com a LM pelo WhatsApp"><img src="/assets/whatsapp-button.png" alt="Ícone do WhatsApp" /><small>Fale com a LM</small></MagneticLink></MotionConfig>;
+/* =========================================================
+   14. BOTÃO FLUTUANTE PARA CONTATO EMERGENCIAL E WHATSAPP
+   ========================================================= */
+function FloatingEmergencyContact() {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className={`floating-contact-container ${expanded ? 'is-open' : ''}`}>
+      {expanded && (
+        <div className="floating-options-menu" role="dialog" aria-label="Opções de Atendimento">
+          <a
+            className="floating-opt-item is-emergency"
+            href={waLink(WA_MSGS.emergency)}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => setExpanded(false)}
+          >
+            <div className="opt-icon"><PhoneCall size={16} /></div>
+            <div>
+              <strong>Atendimento Emergencial 24h</strong>
+              <small>Para imprevistos urgentes no condomínio</small>
+            </div>
+          </a>
+          <a
+            className="floating-opt-item"
+            href={waLink(WA_MSGS.generalQuote)}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => setExpanded(false)}
+          >
+            <div className="opt-icon"><MessageCircle size={16} /></div>
+            <div>
+              <strong>Solicitar Orçamento</strong>
+              <small>Atendimento comercial pelo WhatsApp</small>
+            </div>
+          </a>
+        </div>
+      )}
+
+      <button
+        type="button"
+        className="floating-main-trigger"
+        onClick={() => setExpanded(!expanded)}
+        aria-expanded={expanded}
+        aria-label="Abrir opções de atendimento no WhatsApp"
+      >
+        <span className="floating-pulse" aria-hidden="true" />
+        <img src="/assets/whatsapp-button.png" alt="WhatsApp" width="36" height="36" />
+        <span className="floating-trigger-text">{expanded ? <X size={18} /> : 'Plantão'}</span>
+      </button>
+    </div>
+  );
 }
 
-createRoot(document.getElementById('app')).render(<App />);
+/* =========================================================
+   15. PÁGINA DEDICADA DE LINK NA BIO
+   ========================================================= */
+function LinkInBioPage({ onNavigateHome }) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.title = 'LM Comércio e Serviços | Links Rápidos e Atendimento';
+  }, []);
+
+  const bioLinks = [
+    {
+      num: 1,
+      label: 'ATENDIMENTO EMERGENCIAL 24 HORAS',
+      desc: 'Plantão para demandas emergenciais em condomínios',
+      icon: <PhoneCall size={18} />,
+      url: waLink(WA_MSGS.emergency),
+      isEmergency: true
+    },
+    {
+      num: 2,
+      label: 'SOLICITAR ORÇAMENTO PELO WHATSAPP',
+      desc: 'Orçamentos rápidos com a equipe comercial',
+      icon: <MessageCircle size={18} />,
+      url: waLink(WA_MSGS.generalQuote),
+      isHighlight: true
+    },
+    {
+      num: 3,
+      label: 'DEDETIZAÇÃO E DESRATIZAÇÃO',
+      desc: 'Controle de pragas urbanas e laudos para condomínios',
+      icon: <Bug size={18} />,
+      url: waLink(WA_MSGS.dedetizacao)
+    },
+    {
+      num: 4,
+      label: 'LIMPEZA DE CAIXA D’ÁGUA',
+      desc: 'Higienização e desinfecção com laudo de potabilidade',
+      icon: <Droplet size={18} />,
+      url: waLink(WA_MSGS.caixaAgua)
+    },
+    {
+      num: 5,
+      label: 'SANITIZAÇÃO DE AMBIENTES',
+      desc: 'Proteção para áreas comuns e halls sociais',
+      icon: <Sparkles size={18} />,
+      url: waLink(WA_MSGS.sanitizacao)
+    },
+    {
+      num: 6,
+      label: 'SERVIÇOS EM ALTURA',
+      desc: 'Fachadas, totens e manutenção com equipe NR-35',
+      icon: <Building size={18} />,
+      url: waLink(WA_MSGS.altura)
+    },
+    {
+      num: 7,
+      label: 'QUALIFICAÇÃO TÉCNICA',
+      desc: 'Consulte sobre NRs (35, 12, 33) e emissão de ART',
+      icon: <ShieldCheck size={18} />,
+      url: '/#qualificacao',
+      isInternal: true
+    },
+    {
+      num: 8,
+      label: 'ACESSAR SITE OFICIAL',
+      desc: 'Conheça todos os serviços em manutencaolm.com.br',
+      icon: <ExternalLink size={18} />,
+      url: '/',
+      isHome: true
+    }
+  ];
+
+  return (
+    <div className="bio-page-wrapper">
+      <div className="bio-container">
+        <header className="bio-header">
+          <div className="bio-brand">
+            <img src="/assets/logotipo.png" alt="LM Comércio e Serviços" width="220" height="72" />
+          </div>
+          <p className="bio-slogan">
+            Parceira Estratégica de Síndicos, Administradoras e Condomínios
+          </p>
+          <div className="bio-badge">
+            <Building size={13} /> Atendimento Ágil em São Paulo e Região
+          </div>
+        </header>
+
+        <main className="bio-links-list">
+          {bioLinks.map((item) => {
+            if (item.isHome) {
+              return (
+                <button
+                  key={item.num}
+                  type="button"
+                  className="bio-link-btn is-home"
+                  onClick={onNavigateHome}
+                >
+                  <span className="bio-btn-icon">{item.icon}</span>
+                  <div className="bio-btn-text">
+                    <strong>{item.label}</strong>
+                    <small>{item.desc}</small>
+                  </div>
+                  <ArrowRight size={17} className="bio-btn-arrow" />
+                </button>
+              );
+            }
+
+            if (item.isInternal) {
+              return (
+                <a
+                  key={item.num}
+                  href={item.url}
+                  className="bio-link-btn is-internal"
+                  onClick={() => {
+                    onNavigateHome();
+                    setTimeout(() => {
+                      const el = document.querySelector('#qualificacao');
+                      if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    }, 120);
+                  }}
+                >
+                  <span className="bio-btn-icon">{item.icon}</span>
+                  <div className="bio-btn-text">
+                    <strong>{item.label}</strong>
+                    <small>{item.desc}</small>
+                  </div>
+                  <ArrowRight size={17} className="bio-btn-arrow" />
+                </a>
+              );
+            }
+
+            return (
+              <a
+                key={item.num}
+                href={item.url}
+                target="_blank"
+                rel="noreferrer"
+                className={`bio-link-btn ${item.isEmergency ? 'is-emergency' : ''} ${item.isHighlight ? 'is-highlight' : ''}`}
+              >
+                <span className="bio-btn-icon">{item.icon}</span>
+                <div className="bio-btn-text">
+                  <strong>{item.label}</strong>
+                  <small>{item.desc}</small>
+                </div>
+                <ArrowRight size={17} className="bio-btn-arrow" />
+              </a>
+            );
+          })}
+        </main>
+
+        <footer className="bio-footer">
+          <p>&copy; {new Date().getFullYear()} LM Comércio e Serviços</p>
+          <a href="/" onClick={(e) => { e.preventDefault(); onNavigateHome(); }}>
+            https://manutencaolm.com.br/
+          </a>
+        </footer>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
+   SITE PRINCIPAL COMPLETO
+   ========================================================= */
+function MainSite({ onNavigateBio }) {
+  useEffect(() => {
+    document.title = 'LM Comércio e Serviços | Dedetização, Limpeza de Caixas d\'Água e Manutenção Predial';
+  }, []);
+
+  return (
+    <>
+      <ScrollProgress />
+      <Header onNavigateBio={onNavigateBio} />
+      <main id="conteudo-principal">
+        <Hero />
+        <EmergencySection />
+        <CommonNeedsSection />
+        <ServicesCatalog />
+        <MaintenanceSection />
+        <TechnicalQualificationsSection />
+        <HeightServicesSection />
+        <DifferentialsSection />
+        <GallerySection />
+        <Reviews />
+        <QuoteCtaSection />
+      </main>
+      <Footer onNavigateBio={onNavigateBio} />
+      <FloatingEmergencyContact />
+    </>
+  );
+}
+
+/* =========================================================
+   COMPONENTE RAIZ COM ROTEAMENTO
+   ========================================================= */
+export default function App() {
+  const getIsBioRoute = () => {
+    const path = window.location.pathname.toLowerCase();
+    const hash = window.location.hash.toLowerCase();
+    return path.includes('/links') || hash.includes('/links') || hash.includes('links');
+  };
+
+  const [isBioPage, setIsBioPage] = useState(getIsBioRoute);
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setIsBioPage(getIsBioRoute());
+    };
+
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
+  }, []);
+
+  const navigateToBio = () => {
+    window.history.pushState({}, '', '/links');
+    setIsBioPage(true);
+    window.scrollTo(0, 0);
+  };
+
+  const navigateToHome = () => {
+    window.history.pushState({}, '', '/');
+    setIsBioPage(false);
+    window.scrollTo(0, 0);
+  };
+
+  return (
+    <MotionConfig reducedMotion="user">
+      {isBioPage ? (
+        <LinkInBioPage onNavigateHome={navigateToHome} />
+      ) : (
+        <MainSite onNavigateBio={navigateToBio} />
+      )}
+    </MotionConfig>
+  );
+}
+
+// Inicialização segura no DOM
+const rootEl = document.getElementById('app');
+if (rootEl) {
+  createRoot(rootEl).render(<App />);
+}
