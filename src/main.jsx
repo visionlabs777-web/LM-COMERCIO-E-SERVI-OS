@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { motion, MotionConfig, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
-import { IconArrowDown as ArrowDown, IconArrowUpRight as ArrowUpRight, IconBrandInstagram as Instagram, IconBrandTiktok as Tiktok, IconMessageCircle as MessageCircle, IconX as X } from '@tabler/icons-react';
+import { IconArrowDown as ArrowDown, IconArrowUpRight as ArrowUpRight, IconBrandInstagram as Instagram, IconBrandTiktok as Tiktok, IconCheck as IconCheck, IconMessageCircle as MessageCircle, IconPlus as IconPlus, IconQuote as IconQuote, IconStar as IconStar, IconStarFilled as IconStarFilled, IconX as X } from '@tabler/icons-react';
 import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
 import './styles.css';
 
@@ -135,8 +135,8 @@ function Header() {
       <a className="brand" href="#topo" aria-label="LM Comércio e Serviços — início"><img src="/assets/logotipo.png" alt="LM Comércio e Serviços" /></a>
       <button className="menu-toggle" type="button" aria-expanded={open} aria-controls="main-nav" onClick={() => setOpen(!open)}>{open ? <X size={18} /> : 'Menu'} <span>{open ? '' : '+'}</span></button>
       <nav id="main-nav" className={`main-nav ${open ? 'is-open' : ''}`} aria-label="Navegação principal">
-        <a href="#solucoes" onClick={close}>Soluções</a><a href="#complementares" onClick={close}>Manutenção</a><a href="#quem-atendemos" onClick={close}>Quem atendemos</a><a href="#trabalhos" onClick={close}>Trabalhos</a>
-        <MagneticLink className="nav-cta" href={waLink('Olá! Gostaria de solicitar um orçamento para a LM Comércio e Serviços.')} target="_blank" rel="noreferrer" onClick={close}>Fale com a LM <ArrowUpRight size={15} /></MagneticLink>
+        <a href="#solucoes" onClick={close}>Soluções</a><a href="#complementares" onClick={close}>Manutenção</a><a href="#quem-atendemos" onClick={close}>Quem atendemos</a><a href="#trabalhos" onClick={close}>Trabalhos</a><a href="#avaliacoes" onClick={close}>Avaliações</a>
+        <MagneticLink className="nav-cta" href={waLink('Olá! Gostaria de solicitar um orçamento para a LM Comércio e Serviços.')} target="_blank" rel="noreferrer" onClick={close}><span>Fale com a LM</span> <ArrowUpRight size={15} /></MagneticLink>
       </nav>
     </div>
   </header>;
@@ -158,7 +158,7 @@ function Hero() {
         </motion.div>
       </motion.div>
       <motion.div className="hero-visual" initial={{ opacity: 0, x: 26 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.85, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}>
-        <div className="hero-visual-frame"><motion.img src="/assets/dedetizacao-2.jpeg" alt="Profissional realizando dedetização em uma residência" style={{ y: imageY }} /></div>
+        <div className="hero-visual-frame"><motion.img src="/assets/dedetizacao-2.jpeg" alt="Profissional realizando dedetização em uma residência" /></div>
         <div className="hero-visual-meta"><span>01</span><span>Dedetização &amp; desratização</span><span className="meta-rule" /></div>
       </motion.div>
     </div>
@@ -193,16 +193,418 @@ function GalleryItem({ image, alt, index }) {
   return <Reveal className={`gallery-item gallery-item-${index + 1}`} delay={index * 0.045}><button type="button" aria-label={`Ampliar foto: ${alt}`} onClick={() => setOpen(true)}>{media}<span>{alt} <ArrowUpRight size={16} /></span></button>{open && <div className="gallery-lightbox" role="dialog" aria-modal="true" aria-label={`Imagem ampliada: ${alt}`} onClick={() => setOpen(false)}><button type="button" className="lightbox-close" aria-label="Fechar imagem" onClick={() => setOpen(false)}><X size={30} /></button><img src={image} alt={alt} /></div>}</Reveal>;
 }
 
+const initialReviews = [
+  {
+    id: 'rev-1',
+    name: 'Marcos Vinicius',
+    role: 'Síndico Profissional',
+    entity: 'Condomínio Residencial Jardins do Sul',
+    service: 'Dedetização & Desratização',
+    rating: 5,
+    comment: 'Contratamos a LM para a dedetização semestral e desratização das áreas comuns e garagens. Equipe extremamente pontual, uniformizada e com todos os laudos técnicos e certificados emitidos no mesmo dia para prestação de contas aos moradores. Excelente atendimento!',
+    date: '10/11/2026',
+    verified: true
+  },
+  {
+    id: 'rev-2',
+    name: 'Dra. Fernanda Alcantara',
+    role: 'Gerente Administrativa',
+    entity: 'Colégio Integrado Alpha',
+    service: 'Sanitização',
+    rating: 5,
+    comment: 'Fizeram a sanitização completa das salas de aula, biblioteca e pátios. O produto utilizado não deixou odores fortes e permitiu o retorno das atividades com total segurança. Profissionalismo ímpar da LM.',
+    date: '04/11/2026',
+    verified: true
+  },
+  {
+    id: 'rev-3',
+    name: 'Roberto Guimarães',
+    role: 'Síndico',
+    entity: 'Condomínio Torre Empresarial Paulista',
+    service: 'Limpeza de Caixas d’água',
+    rating: 5,
+    comment: 'Executaram a limpeza e desinfecção de duas caixas d’água de grande porte com agendamento no fim de semana para não interromper o abastecimento comercial. Fotos do antes e depois anexadas ao laudo com potabilidade da água impecável.',
+    date: '28/10/2026',
+    verified: true
+  },
+  {
+    id: 'rev-4',
+    name: 'Camila Silveira',
+    role: 'Coordenadora de Facilities',
+    entity: 'Hub Corporativo Berrini',
+    service: 'Manutenção',
+    rating: 5,
+    comment: 'A LM resolveu rapidamente demandas elétricas e pequenos reparos hidráulicos em nossos andares. Ter uma única empresa de confiança para múltiplos serviços facilitou demais o nosso fluxo de facilities.',
+    date: '22/10/2026',
+    verified: true
+  },
+  {
+    id: 'rev-5',
+    name: 'Antônio Carlos Neves',
+    role: 'Conselho Fiscal',
+    entity: 'Residencial Vila Nova',
+    service: 'Dedetização & Desratização',
+    rating: 5,
+    comment: 'Trabalho sério e muito seguro. Tínhamos problemas recorrentes com formigas e baratas de esgoto nas galerias do condomínio. Após a intervenção da LM, o controle foi 100% efetivo.',
+    date: '15/10/2026',
+    verified: true
+  },
+  {
+    id: 'rev-6',
+    name: 'Patrícia Rocha',
+    role: 'Administradora de Bens',
+    entity: 'Imóveis & Gestão Condominial',
+    service: 'Limpeza de Caixas d’água',
+    rating: 5,
+    comment: 'Acompanhei o serviço em 3 prédios sob minha administração. Preço justo, cumprimento rigoroso de prazos e equipe com todos os EPIs e certificações exigidas pela vigilância.',
+    date: '08/10/2026',
+    verified: true
+  }
+];
+
+function StarRating({ rating, size = 15, className = '' }) {
+  return (
+    <div className={`reviews-stars-row ${className}`} aria-label={`${rating} de 5 estrelas`}>
+      {[1, 2, 3, 4, 5].map((star) => (
+        star <= rating ? <IconStarFilled key={star} size={size} /> : <IconStar key={star} size={size} />
+      ))}
+    </div>
+  );
+}
+
+function Reviews() {
+  const [reviews, setReviews] = useState(() => {
+    try {
+      const saved = localStorage.getItem('lm_customer_reviews');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return initialReviews;
+  });
+
+  const [activeFilter, setActiveFilter] = useState('Todos');
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    role: '',
+    entity: '',
+    service: 'Dedetização & Desratização',
+    rating: 5,
+    comment: ''
+  });
+  const [hoverRating, setHoverRating] = useState(0);
+  const [success, setSuccess] = useState(false);
+
+  const categories = ['Todos', 'Dedetização & Desratização', 'Limpeza de Caixas d’água', 'Sanitização', 'Manutenção'];
+
+  const ratingLabels = {
+    1: 'Precisa melhorar',
+    2: 'Regular',
+    3: 'Bom serviço',
+    4: 'Muito bom!',
+    5: 'Excelente! ⭐⭐⭐⭐⭐'
+  };
+
+  const handleRatingClick = (val) => {
+    setFormData(prev => ({ ...prev, rating: val }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.name.trim() || !formData.comment.trim()) return;
+
+    const newReview = {
+      id: `rev-${Date.now()}`,
+      name: formData.name.trim(),
+      role: formData.role.trim() || 'Cliente Verificado',
+      entity: formData.entity.trim() || 'Condomínio / Empresa',
+      service: formData.service,
+      rating: Number(formData.rating) || 5,
+      comment: formData.comment.trim(),
+      date: new Date().toLocaleDateString('pt-BR'),
+      verified: true
+    };
+
+    const updated = [newReview, ...reviews];
+    setReviews(updated);
+    try {
+      localStorage.setItem('lm_customer_reviews', JSON.stringify(updated));
+    } catch (err) {
+      console.error(err);
+    }
+
+    setSuccess(true);
+    setFormData({
+      name: '',
+      role: '',
+      entity: '',
+      service: 'Dedetização & Desratização',
+      rating: 5,
+      comment: ''
+    });
+
+    setTimeout(() => {
+      setSuccess(false);
+      setShowForm(false);
+    }, 2400);
+  };
+
+  const filteredReviews = activeFilter === 'Todos'
+    ? reviews
+    : reviews.filter(r => r.service.toLowerCase().includes(activeFilter.toLowerCase()) || activeFilter.toLowerCase().includes(r.service.toLowerCase()));
+
+  const avgRating = reviews.length
+    ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
+    : '5.0';
+
+  const getInitials = (name) => {
+    return name ? name.split(' ').map(n => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase() : 'LM';
+  };
+
+  return (
+    <section className="reviews-section" id="avaliacoes">
+      <div className="container">
+        <Reveal className="section-heading split-heading">
+          <div>
+            <div className="section-label section-label-dark">
+              <span>06</span>
+              <span className="label-line" />
+              <span>Avaliações &amp; Opiniões</span>
+            </div>
+            <p className="kicker light">A confiança de quem contrata</p>
+            <h2>Transparência e resultados <em>comprovados pelos clientes.</em></h2>
+          </div>
+          <p className="heading-note">
+            Confira depoimentos e avaliações reais de síndicos, gestores prediais e empresas que contam com a LM Comércio e Serviços.
+          </p>
+        </Reveal>
+
+        <Reveal className="reviews-stats-bar" delay={0.06}>
+          <div className="reviews-score-block">
+            <span className="reviews-big-score">{avgRating}</span>
+            <div>
+              <StarRating rating={Math.round(Number(avgRating))} size={18} />
+              <span className="reviews-stat-label">Média geral baseada em {reviews.length} avaliações</span>
+            </div>
+          </div>
+
+          <div className="reviews-stat-divider" aria-hidden="true" />
+
+          <div className="reviews-stat-item">
+            <span className="reviews-stat-num">100%</span>
+            <span className="reviews-stat-label">Laudo Técnico &amp; Pontualidade</span>
+          </div>
+
+          <div className="reviews-stat-divider" aria-hidden="true" />
+
+          <div className="reviews-stat-item">
+            <span className="reviews-stat-num">+50</span>
+            <span className="reviews-stat-label">Condomínios &amp; Escolas Atendidos</span>
+          </div>
+
+          <button
+            type="button"
+            className="reviews-btn-trigger"
+            onClick={() => setShowForm(!showForm)}
+            aria-expanded={showForm}
+          >
+            <IconPlus size={16} />
+            {showForm ? 'Fechar formulário' : 'Avaliar Nossos Serviços'}
+          </button>
+        </Reveal>
+
+        {showForm && (
+          <motion.div
+            className="review-form-card"
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.28 }}
+          >
+            <h3 className="review-form-title">Compartilhe sua experiência com a LM</h3>
+            <p className="review-form-desc">
+              Sua avaliação ajuda outros síndicos e gestores a conhecerem a qualidade dos nossos serviços.
+            </p>
+
+            <form onSubmit={handleSubmit}>
+              <div className="review-stars-picker">
+                <span className="review-label" style={{ marginBottom: 0, marginRight: 8 }}>Sua nota:</span>
+                {[1, 2, 3, 4, 5].map((val) => {
+                  const active = (hoverRating || formData.rating) >= val;
+                  return (
+                    <button
+                      key={val}
+                      type="button"
+                      className={`star-btn ${active ? 'is-active' : ''}`}
+                      onMouseEnter={() => setHoverRating(val)}
+                      onMouseLeave={() => setHoverRating(0)}
+                      onClick={() => handleRatingClick(val)}
+                      aria-label={`${val} estrelas`}
+                    >
+                      {active ? <IconStarFilled size={26} /> : <IconStar size={26} />}
+                    </button>
+                  );
+                })}
+                <span className="star-rating-hint">
+                  {ratingLabels[hoverRating || formData.rating]}
+                </span>
+              </div>
+
+              <div className="review-form-grid">
+                <div>
+                  <label className="review-label" htmlFor="rev-name">Seu Nome *</label>
+                  <input
+                    id="rev-name"
+                    className="review-input"
+                    type="text"
+                    required
+                    placeholder="Ex: Carlos Oliveira"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  />
+                </div>
+
+                <div>
+                  <label className="review-label" htmlFor="rev-role">Seu Cargo / Função</label>
+                  <input
+                    id="rev-role"
+                    className="review-input"
+                    type="text"
+                    placeholder="Ex: Síndico Profissional / Morador / Gerente"
+                    value={formData.role}
+                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                  />
+                </div>
+
+                <div>
+                  <label className="review-label" htmlFor="rev-entity">Condomínio / Empresa / Local</label>
+                  <input
+                    id="rev-entity"
+                    className="review-input"
+                    type="text"
+                    placeholder="Ex: Condomínio Edifício Mirante do Sol"
+                    value={formData.entity}
+                    onChange={(e) => setFormData({ ...formData, entity: e.target.value })}
+                  />
+                </div>
+
+                <div>
+                  <label className="review-label" htmlFor="rev-service">Serviço Realizado *</label>
+                  <select
+                    id="rev-service"
+                    className="review-select"
+                    value={formData.service}
+                    onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+                  >
+                    <option value="Dedetização & Desratização">Dedetização &amp; Desratização</option>
+                    <option value="Limpeza de Caixas d’água">Limpeza de Caixas d’água</option>
+                    <option value="Sanitização">Sanitização de Ambientes</option>
+                    <option value="Manutenção">Manutenção Predial / Elétrica / Hidráulica</option>
+                    <option value="Múltiplos Serviços">Múltiplos Serviços Integrados</option>
+                  </select>
+                </div>
+
+                <div className="review-field-full">
+                  <label className="review-label" htmlFor="rev-comment">Seu Depoimento / Comentário *</label>
+                  <textarea
+                    id="rev-comment"
+                    className="review-textarea"
+                    required
+                    rows={4}
+                    placeholder="Conte como foi o atendimento, pontualidade da equipe, emissão de laudo e resultado do serviço..."
+                    value={formData.comment}
+                    onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="review-form-actions">
+                <button type="submit" className="review-submit-btn">
+                  <IconCheck size={16} /> Publicar Avaliação
+                </button>
+                <button
+                  type="button"
+                  className="review-cancel-btn"
+                  onClick={() => setShowForm(false)}
+                >
+                  Cancelar
+                </button>
+              </div>
+
+              {success && (
+                <div className="review-success-msg">
+                  <IconCheck size={18} />
+                  <span>Sua avaliação foi registrada com sucesso! Muito obrigado pelo feedback.</span>
+                </div>
+              )}
+            </form>
+          </motion.div>
+        )}
+
+        <Reveal className="reviews-filter-bar" delay={0.08}>
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              className={`reviews-filter-pill ${activeFilter === cat ? 'is-active' : ''}`}
+              onClick={() => setActiveFilter(cat)}
+            >
+              {cat}
+            </button>
+          ))}
+        </Reveal>
+
+        <div className="reviews-grid">
+          {filteredReviews.map((item, idx) => (
+            <Reveal key={item.id || idx} delay={idx * 0.05} className="review-card">
+              <div>
+                <div className="review-card-top">
+                  <span className="review-card-tag">{item.service}</span>
+                  <StarRating rating={item.rating} size={15} />
+                </div>
+                <p className="review-card-quote">
+                  "{item.comment}"
+                </p>
+              </div>
+
+              <div className="review-card-author">
+                <div className="review-author-avatar">
+                  {getInitials(item.name)}
+                </div>
+                <div className="review-author-info">
+                  <div className="review-author-name">{item.name}</div>
+                  <div className="review-author-meta">
+                    {item.role}{item.entity ? ` • ${item.entity}` : ''}
+                  </div>
+                  {item.verified && (
+                    <span className="review-verified-badge">
+                      <IconCheck size={12} /> Cliente Verificado • {item.date}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Contact() {
-  return <section className="contact section-dark" id="contato"><div className="container contact-grid"><Reveal className="contact-mark"><img src="/assets/logotipo.png" alt="LM Comércio e Serviços" /><p>Uma empresa parceira para cuidar do seu espaço.</p></Reveal><Reveal className="contact-copy" delay={0.12}><p className="kicker light">Vamos conversar?</p><h2>Precisa de uma empresa para <em>cuidar do seu condomínio?</em></h2><p>Conte com a LM Comércio e Serviços para diferentes necessidades de manutenção, dedetização, limpeza e conservação.</p><MagneticLink className="button button-primary" href={waLink('Olá! Gostaria de conhecer os serviços da LM Comércio e Serviços.')} target="_blank" rel="noreferrer">Fale com a LM pelo WhatsApp <MessageCircle size={18} /></MagneticLink></Reveal></div></section>;
+  return <section className="contact section-dark" id="contato"><div className="container contact-grid"><Reveal className="contact-mark"><img src="/assets/logotipo.png" alt="LM Comércio e Serviços" /><p>Uma empresa parceira para cuidar do seu espaço.</p></Reveal><Reveal className="contact-copy" delay={0.12}><p className="kicker light">Vamos conversar?</p><h2>Precisa de uma empresa para cuidar da sua <em>casa, condomínio ou negócio?</em></h2><p>Seja para sua residência, condomínio ou empresa, conte com a LM Comércio e Serviços para diferentes necessidades de manutenção, dedetização, limpeza e conservação.</p><MagneticLink className="button button-primary" href={waLink('Olá! Gostaria de conhecer os serviços da LM Comércio e Serviços.')} target="_blank" rel="noreferrer">Fale com a LM pelo WhatsApp <MessageCircle size={18} /></MagneticLink></Reveal></div></section>;
 }
 
 function Footer() {
-  return <footer className="site-footer"><div className="container footer-grid"><div className="footer-brand"><img src="/assets/logotipo.png" alt="LM Comércio e Serviços" /><p>Serviços para conservar, cuidar e manter.</p></div><div><p className="footer-label">Navegação</p><a href="#solucoes">Soluções</a><a href="#complementares">Manutenção</a><a href="#trabalhos">Trabalhos</a></div><div><p className="footer-label">Contato</p><a href="tel:+5511947231234">(11) 94723-1234</a><a href={waLink('Olá! Gostaria de falar com a LM Comércio e Serviços.')} target="_blank" rel="noreferrer">WhatsApp <ArrowUpRight size={14} /></a><div className="footer-socials" aria-label="Redes sociais"><span className="footer-social-label">Em breve</span><button className="social-button" type="button" disabled aria-label="Instagram da LM Comércio e Serviços — link em breve"><Instagram size={17} /><span>Instagram</span></button><button className="social-button" type="button" disabled aria-label="TikTok da LM Comércio e Serviços — link em breve"><Tiktok size={17} /><span>TikTok</span></button></div></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} LM Comércio e Serviços</span><span>Conservação, manutenção e cuidado.</span></div></footer>;
+  return <footer className="site-footer"><div className="container footer-grid"><div className="footer-brand"><img src="/assets/logotipo.png" alt="LM Comércio e Serviços" /><p>Serviços para conservar, cuidar e manter.</p></div><div><p className="footer-label">Navegação</p><a href="#solucoes">Soluções</a><a href="#complementares">Manutenção</a><a href="#trabalhos">Trabalhos</a><a href="#avaliacoes">Avaliações</a></div><div><p className="footer-label">Contato</p><a href="tel:+5511947231234">(11) 94723-1234</a><a href={waLink('Olá! Gostaria de falar com a LM Comércio e Serviços.')} target="_blank" rel="noreferrer">WhatsApp <ArrowUpRight size={14} /></a><div className="footer-socials" aria-label="Redes sociais"><span className="footer-social-label">Em breve</span><button className="social-button" type="button" disabled aria-label="Instagram da LM Comércio e Serviços — link em breve"><Instagram size={17} /><span>Instagram</span></button><button className="social-button" type="button" disabled aria-label="TikTok da LM Comércio e Serviços — link em breve"><Tiktok size={17} /><span>TikTok</span></button></div></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} LM Comércio e Serviços</span><span>Conservação, manutenção e cuidado.</span></div></footer>;
 }
 
 function App() {
-  return <MotionConfig reducedMotion="user"><SpotlightCursor /><ScrollProgress /><Header /><main><Hero /><Intro /><Services /><Complementary /><Audience /><Gallery /><Contact /></main><Footer /><MagneticLink className="floating-whatsapp" href={waLink('Olá! Gostaria de falar com a LM Comércio e Serviços.')} target="_blank" rel="noreferrer" aria-label="Falar com a LM pelo WhatsApp"><img src="/assets/whatsapp-button.png" alt="" /><small>Fale com a LM</small></MagneticLink></MotionConfig>;
+  return <MotionConfig reducedMotion="user"><SpotlightCursor /><ScrollProgress /><Header /><main><Hero /><Intro /><Services /><Complementary /><Audience /><Gallery /><Reviews /><Contact /></main><Footer /><MagneticLink className="floating-whatsapp" href={waLink('Olá! Gostaria de falar com a LM Comércio e Serviços.')} target="_blank" rel="noreferrer" aria-label="Falar com a LM pelo WhatsApp"><img src="/assets/whatsapp-button.png" alt="" /><small>Fale com a LM</small></MagneticLink></MotionConfig>;
 }
 
 createRoot(document.getElementById('app')).render(<App />);

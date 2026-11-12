@@ -145,7 +145,7 @@ app.innerHTML = `
     </section>
 
     <section class="contact section-dark" id="contato">
-      <div class="container contact-grid"><div class="contact-mark reveal"><img src="/assets/logotipo.png" alt="LM Comércio e Serviços" /><p>Uma empresa parceira para cuidar do seu espaço.</p></div><div class="contact-copy reveal reveal-delay"><p class="kicker light">Vamos conversar?</p><h2>Precisa de uma empresa para <em>cuidar do seu condomínio?</em></h2><p>Conte com a LM Comércio e Serviços para diferentes necessidades de manutenção, dedetização, limpeza e conservação.</p><a class="button button-primary" href="${waLink('Olá! Gostaria de conhecer os serviços da LM Comércio e Serviços.')}" target="_blank" rel="noreferrer">Fale com a LM pelo WhatsApp <span>↗</span></a></div></div>
+      <div class="container contact-grid"><div class="contact-mark reveal"><img src="/assets/logotipo.png" alt="LM Comércio e Serviços" /><p>Uma empresa parceira para cuidar do seu espaço.</p></div><div class="contact-copy reveal reveal-delay"><p class="kicker light">Vamos conversar?</p><h2>Precisa de uma empresa para cuidar da sua <em>casa, condomínio ou negócio?</em></h2><p>Seja para sua residência, condomínio ou empresa, conte com a LM Comércio e Serviços para diferentes necessidades de manutenção, dedetização, limpeza e conservação.</p><a class="button button-primary" href="${waLink('Olá! Gostaria de conhecer os serviços da LM Comércio e Serviços.')}" target="_blank" rel="noreferrer">Fale com a LM pelo WhatsApp <span>↗</span></a></div></div>
     </section>
   </main>
 
