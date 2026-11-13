@@ -1212,9 +1212,6 @@ function Footer() {
             <p>
               Parceira estratégica de síndicos, condomínios e administradoras. Soluções completas em dedetização, limpeza de caixas d'água, sanitização, serviços em altura e manutenção predial.
             </p>
-            <div className="footer-domain-badge">
-              <span>Domínio Oficial:</span> <strong>https://manutencaolm.com.br/</strong>
-            </div>
           </div>
 
           <div>
