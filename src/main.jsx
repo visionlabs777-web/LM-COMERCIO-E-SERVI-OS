@@ -8,6 +8,7 @@ import {
   IconArrowUpRight as ArrowUpRight,
   IconBrandInstagram as Instagram,
   IconBrandTiktok as Tiktok,
+  IconBug as Bug,
   IconBuildingSkyscraper as Building,
   IconCertificate as Certificate,
   IconCheck as IconCheck,
